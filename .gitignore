@@ -1,0 +1,65 @@
+# =============================================================================
+# kaju-blog-wp-vite-sqlite
+# 方針: 生成物・ローカル環境・秘密情報のみ除外（ソースは極力追跡）
+# =============================================================================
+
+# --- WordPress: ランタイム・メディア・DB --------------------------------------
+
+wordpress/wp-content/uploads/
+wordpress/wp-content/upgrade/
+wordpress/wp-content/database/.ht.sqlite*
+wordpress/wp-content/database/*.sqlite
+wordpress/wp-content/debug.log
+wordpress/wp-content/cache/
+wordpress/wp-content/backup*/
+wordpress/wp-content/backups/
+wordpress/wp-content/blogs.dir/
+
+# Vite ビルド出力（本番は npm run build / CI で生成）
+wordpress/wp-content/themes/kaju-blog/assets/
+
+# ローカル上書き用（本番の wp-config.php はリポジトリで管理）
+wordpress/wp-config-local.php
+wp-config-local.php
+
+# --- Frontend (Vite) ---------------------------------------------------------
+
+frontend/node_modules/
+frontend/dist/
+
+# --- 環境変数・秘密情報 --------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+# --- Docker（ローカル上書きのみ）----------------------------------------------
+
+docker-compose.override.yml
+
+# --- OS ------------------------------------------------------------------------
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+._*
+
+# --- エディタ ------------------------------------------------------------------
+
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- ログ・一時ファイル --------------------------------------------------------
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- 誤コミット防止 ------------------------------------------------------------
+
+.git___/

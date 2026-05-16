@@ -1,0 +1,63 @@
+@use "../../global" as g;
+
+/*!
+page > top > posts
+------------------------------
+*/
+.top-posts {
+    padding: 72px 0 96px;
+}
+
+.top-posts__inner {
+}
+
+.top-posts__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 40px;
+}
+
+.top-posts__heading-en {
+    font-family: var(--font-family-en);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--color-main);
+    letter-spacing: 0.04em;
+
+    @include g.mq() {
+        font-size: 38px;
+    }
+}
+
+.top-posts__heading-jp {
+    font-size: 13px;
+    color: var(--color-disable);
+    letter-spacing: 0.1em;
+}
+
+.top-posts__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    @include g.mq() {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include g.mq(lg) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.top-posts__item {
+}
+
+.top-posts__more {
+    display: flex;
+    justify-content: center;
+    margin-top: 56px;
+}

@@ -1,0 +1,54 @@
+@use "../../global" as g;
+
+/*!
+page > top > log
+------------------------------
+*/
+.top-log {
+  background-color: var(--color-section-warm);
+  padding-block: 60px;
+}
+
+.top-log__heading {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+  color: var(--color-main);
+  text-align: center;
+
+  @include g.mq(md) {
+    font-size: 40px;
+  }
+}
+
+.top-log__card-list {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include g.mq(md) {
+    flex-direction: row;
+    gap: calc(100% * 32 / 1200);
+  }
+}
+
+.top-log__card-item {
+  padding: 16px;
+  border-radius: 32px;
+  background-color: var(--color-white);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-5px);
+      opacity: 0.7;
+    }
+  }
+
+  &:active {
+    transform: translateY(-5px);
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,43 @@
+@use "../global" as g;
+
+/*!
+component > pagenation
+------------------------------
+*/
+.c-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 8px;
+
+    @include g.mq() {
+        margin-top: 48px;
+    }
+}
+
+.c-pagination-item {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border-black);
+
+    @include g.mq() {
+        width: 40px;
+        height: 40px;
+    }
+
+    &--prev {
+        @include g.arrow(-135deg);
+    }
+
+    &--next {
+        @include g.arrow();
+    }
+}
+
+.is-pagination-active {
+    background-color: var(--color-bg-black);
+    color: var(--color-font-white);
+}

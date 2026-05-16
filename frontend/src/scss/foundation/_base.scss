@@ -1,0 +1,23 @@
+@use "../global" as g;
+
+/*!
+foundation > base
+------------------------------
+*/
+body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    font-size: 15px;
+    color: var(--color-contrast);
+    font-family: var(--font-family-jp);
+    background-color: var(--color-base);
+}
+
+/* Sticky footer: コンテンツが短いページでもフッターをビューポート下端に寄せる */
+main {
+    flex: 1;
+}

@@ -1,0 +1,38 @@
+@use "../../global" as g;
+
+/*!
+page > contact > profile-link
+------------------------------
+*/
+.contact-profile-link {
+    display: block;
+    margin-top: 32px;
+    // font-size: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    text-align: center;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+
+    @include g.mq(md) {
+        margin-top: 40px;
+        // font-size: 18px;
+        font-size: 20px;
+    }
+
+    @include g.hover {
+        opacity: 0.7;
+    }
+
+    &:active {
+        opacity: 0.7;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}

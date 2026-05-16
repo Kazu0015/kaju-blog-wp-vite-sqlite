@@ -1,0 +1,47 @@
+@use "../../global" as g;
+
+/*!
+page > single > header
+------------------------------
+*/
+.single-header {
+  margin-bottom: 28px;
+
+  @include g.mq(md) {
+    margin-bottom: 36px;
+  }
+}
+
+.single-header__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.single-header__date {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 28px;
+  }
+}
+
+.single-header__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 48px;
+  }
+
+  @include g.mq(lg) {
+    font-size: 40px;
+  }
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label=";ÏjW">
+  <rect width="800" height="450" fill="#f0e9df"/>
+  <path fill="none" stroke="#d8cfc4" stroke-width="1" d="M0 450L800 0M-80 80L880 530M-80 370L880 80"/>
+  <g transform="translate(400 205)">
+    <rect x="-48" y="-36" width="96" height="72" rx="8" fill="#faf6f0" stroke="#d8cfc4" stroke-width="2"/>
+    <circle cx="-18" cy="-12" r="8" fill="#d8cfc4"/>
+    <path d="M-44 28L-8-4 16 12 44-8 44 28H-44Z" fill="#d8cfc4"/>
+  </g>
+  <text x="400" y="280" text-anchor="middle" fill="#9f8a74" font-family="system-ui, sans-serif" font-size="18" font-weight="500" letter-spacing="0.1em">No Image</text>
+</svg>

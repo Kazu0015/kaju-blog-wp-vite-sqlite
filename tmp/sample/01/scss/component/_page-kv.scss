@@ -1,0 +1,32 @@
+@use "../global" as g;
+
+/*!
+component > page-kv
+------------------------------
+*/
+.c-page-kv {
+    height: 170px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    @include g.mq() {
+        height: 300px;
+    }
+
+    &--product {
+        background-image: url(../img/bg-product-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-product-kv.jpg);
+        }
+    }
+
+    &--error {
+        background-image: url(../img/bg-error-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-error-kv.jpg);
+        }
+    }
+}

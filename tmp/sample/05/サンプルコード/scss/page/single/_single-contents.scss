@@ -1,0 +1,74 @@
+@use "../../global" as g;
+
+/*!
+page > single > single-contents
+------------------------------
+*/
+.single-contents {
+    margin-top: 40px;
+
+    > * {
+        &:first-child {
+            margin-top: 0 !important;
+        }
+
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+    }
+
+    p {
+        margin: 24px 0;
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 64px 0px 24px;
+        background-color: var(--color-bg-black);
+        color: var(--color-font-white);
+        padding: 10px 8px;
+        border-radius: 8px;
+        line-height: 1.6;
+
+        @include g.mq() {
+            font-size: 20px;
+            margin: 80px 0px 24px;
+        }
+    }
+
+    h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 24px 0px;
+        position: relative;
+        border-bottom: 1px solid var(--color-border-primary);
+        padding-left: 36px;
+        padding-bottom: 6px;
+        line-height: 1.6;
+
+        @include g.mq() {
+            font-size: 20px;
+            margin: 40px 0px 24px;
+        }
+
+        &::before {
+            content: "";
+            display: block;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            top: 15px;
+            left: 0;
+            transform: translateY(-50%);
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url(../img/icon-mosha.png);
+
+            @include g.mq() {
+                top: 18px;
+            }
+        }
+    }
+}

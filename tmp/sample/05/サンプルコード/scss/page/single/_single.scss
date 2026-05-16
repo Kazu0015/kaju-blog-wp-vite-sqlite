@@ -1,0 +1,20 @@
+@use "../../global" as g;
+
+/*!
+page > single > single
+------------------------------
+*/
+.single-title {
+    margin-top: 8px;
+}
+
+.single-thumbnail {
+    margin-top: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.single-banner {
+    display: block;
+    margin-top: 24px;
+}

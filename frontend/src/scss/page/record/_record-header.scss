@@ -1,0 +1,26 @@
+@use "../../global" as g;
+
+/*!
+page > record > header
+------------------------------
+*/
+.record-header {
+  margin-bottom: 32px;
+  text-align: center;
+
+  @include g.mq(md) {
+    margin-bottom: 40px;
+  }
+}
+
+.record-header__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 40px;
+  }
+}

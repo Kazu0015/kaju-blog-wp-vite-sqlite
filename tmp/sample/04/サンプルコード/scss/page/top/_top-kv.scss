@@ -1,0 +1,22 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-kv
+------------------------------
+*/
+.top-kv {
+    aspect-ratio: 360/500;
+    background-image: url(../img/bg-top-kv-sp.jpg);
+    background-position: center;
+    background-size: cover;
+
+    @include g.mq(sm) {
+        aspect-ratio: inherit;
+        height: 500px;
+        background-image: url(../img/bg-top-kv.jpg);
+    }
+
+    @include g.mq() {
+        height: 685px;
+    }
+}

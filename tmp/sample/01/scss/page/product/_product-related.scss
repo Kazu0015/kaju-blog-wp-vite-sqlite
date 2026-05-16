@@ -1,0 +1,17 @@
+@use "../../global" as g;
+
+/*!
+page > product > product-related
+------------------------------
+*/
+.product-related {
+    background-color: var(--color-bg-primary-light);
+}
+
+.product-related-title {
+    line-height: 1.6;
+
+    @include g.mq() {
+        line-height: 1;
+    }
+}

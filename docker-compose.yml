@@ -1,0 +1,24 @@
+services:
+  wordpress:
+    build: .
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+
+  vite:
+    image: node:20-alpine
+    working_dir: /repo/frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/repo
+      - kaju_blog_vite_node_modules:/repo/frontend/node_modules
+    environment:
+      CHOKIDAR_USEPOLLING: "1"
+    command: sh -c "npm install && exec npm run dev -- --host 0.0.0.0"
+
+volumes:
+  kaju_blog_vite_node_modules:

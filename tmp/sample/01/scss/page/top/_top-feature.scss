@@ -1,0 +1,63 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-feature
+------------------------------
+*/
+.top-feature-list {
+    display: grid;
+    gap: 48px 40px;
+    grid-template-columns: repeat(1, 1fr);
+
+    @include g.mq(sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include g.mq(lg) {
+        gap: 80px 60px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.top-feature-item {
+    &:nth-child(1) {
+        @include g.mq(lg) {
+            grid-column: 1 / 4;
+            display: grid;
+            grid-template-columns: 50% 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .top-feature-item-img {
+            img {
+                aspect-ratio: 324/182;
+                object-fit: cover;
+
+                @include g.mq(lg) {
+                    aspect-ratio: inherit;
+                }
+            }
+        }
+
+        .top-feature-item-contents {
+            @include g.mq(lg) {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+.top-feature-item-contents {
+    margin-top: 20px;
+}
+
+.top-feature-item-oil {
+    color: var(--color-font-primary);
+    font-family: var(--font-family-english);
+    letter-spacing: 0.12em;
+}
+
+.top-feature-item-text {
+    margin-top: 6px;
+}

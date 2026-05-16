@@ -1,0 +1,28 @@
+@use "../global" as g;
+
+/*
+component > post
+------------------------------
+*/
+.c-post-thumbnail {
+    margin-top: 8px;
+    display: block;
+
+    img {
+        aspect-ratio: 324 / 170;
+        object-fit: cover;
+
+        border-radius: 16px;
+    }
+}
+
+.c-post-title {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.6;
+
+    @include g.mq() {
+        font-size: 20px;
+    }
+}

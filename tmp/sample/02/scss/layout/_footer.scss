@@ -1,0 +1,31 @@
+@use "../global" as g;
+
+/*!
+layout > footer
+------------------------------
+*/
+.footer {
+    padding: 32px 0;
+    text-align: center;
+}
+
+.footer-logo {
+    margin: 0 auto;
+    width: 150px;
+
+    img {
+        display: block;
+    }
+}
+
+.footer-copyright {
+    font-size: 12px;
+    font-family: var(--font-family-english);
+    display: block;
+    margin-top: 8px;
+    line-height: 1;
+
+    @include g.mq() {
+        margin-top: 16px;
+    }
+}

@@ -1,0 +1,28 @@
+@use "../global" as g;
+
+/*!
+sp.pc表示
+------------------------------
+*/
+// 余白関連
+.u-ptb {
+    padding: 56px 0 !important;
+
+    @include g.mq() {
+        padding: 64px 0 !important;
+    }
+}
+
+// 隠しテキスト
+.u-visually-hidden {
+    position: absolute !important;
+    white-space: nowrap !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    padding: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    margin: -1px !important;
+}

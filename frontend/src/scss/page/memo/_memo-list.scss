@@ -1,0 +1,40 @@
+@use "../../global" as g;
+
+/*!
+page > memo > list
+------------------------------
+*/
+.memo-list__lead {
+  margin-bottom: 32px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.9;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    margin-bottom: 40px;
+    font-size: 20px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.memo-list__grid .c-card-post {
+  height: 100%;
+}
+
+.memo-list__empty {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--color-disable);
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.memo-single__content {
+  margin-bottom: 48px;
+}

@@ -1,0 +1,17 @@
+@use "../global" as g;
+
+/*!
+foundation > base
+------------------------------
+*/
+body {
+    color: var(--color-font-base);
+    background-color: var(--color-bg-base);
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    line-height: 2;
+
+    @include g.mq() {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,31 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-award
+------------------------------
+*/
+.top-award {
+    background-color: var(--color-bg-base-light);
+}
+
+.top-award-list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+
+    @include g.mq() {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+}
+
+.top-award-item-title {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 1;
+
+    @include g.mq() {
+        font-size: 18px;
+    }
+}

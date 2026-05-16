@@ -1,0 +1,84 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-profile
+------------------------------
+*/
+.top-profile-body {
+    @include g.mq() {
+        background-color: var(--color-bg-base-light);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.top-profile-img {
+    img {
+        aspect-ratio: 324/204;
+
+        @include g.mq() {
+            aspect-ratio: inherit;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.top-profile-text {
+    margin-top: 24px;
+
+    @include g.mq() {
+        margin-top: 0;
+        padding: 40px 24px;
+        align-self: center;
+    }
+
+    @include g.mq(lg) {
+        padding: 40px;
+    }
+}
+
+.top-profile-name {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+
+    @include g.mq() {
+        gap: 16px;
+    }
+}
+
+.top-profile-name-text {
+    line-height: 1;
+    letter-spacing: 0.2em;
+
+    &--japanese {
+        font-size: 18px;
+
+        @include g.mq() {
+            font-size: 24px;
+        }
+    }
+
+    &--english {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-family: var(--font-family-english);
+
+        @include g.mq() {
+            font-size: 14px;
+        }
+    }
+}
+
+.top-profile-description {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include g.mq() {
+        margin-top: 24px;
+        gap: 24px;
+    }
+}

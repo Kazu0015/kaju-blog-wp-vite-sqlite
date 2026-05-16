@@ -1,0 +1,43 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-shoplist
+------------------------------
+*/
+.top-shoplist-copy {
+    text-align: center;
+    margin-top: 40px;
+
+    @include g.mq() {
+        margin-top: 48px;
+    }
+
+    span {
+        display: block;
+    }
+}
+
+.top-shoplist-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 14px;
+    max-width: 738px;
+    margin: 0 auto;
+
+    @include g.mq() {
+        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.top-shoplist-item {
+    height: 45px;
+    display: grid;
+    place-items: center;
+    border-radius: 100vh;
+    background-color: var(--color-bg-secondary);
+
+    @include g.mq() {
+        height: 55px;
+    }
+}

@@ -1,0 +1,50 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-works
+------------------------------
+*/
+.top-works-gallery-list {
+    display: flex;
+    overflow-x: scroll;
+    margin-top: 8px;
+    scrollbar-width: none;
+    gap: 8px;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @include g.mq() {
+        margin-top: 16px;
+    }
+}
+
+.top-works-gallery-item {
+    width: 88px;
+    flex-shrink: 0;
+}
+
+.top-works-message {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 40px;
+    line-height: 1.75;
+
+    @include g.mq() {
+        font-size: 24px;
+        margin-top: 56px;
+    }
+
+    span {
+        display: block;
+
+        @include g.mq() {
+            display: inline;
+        }
+    }
+}
+
+.top-works-button {
+    margin-top: 24px;
+}

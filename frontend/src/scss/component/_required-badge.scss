@@ -1,0 +1,20 @@
+@use "../global" as g;
+
+/*!
+component > required-badge
+------------------------------
+*/
+.c-required-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    color: var(--color-white);
+    background-color: var(--color-accent);
+}

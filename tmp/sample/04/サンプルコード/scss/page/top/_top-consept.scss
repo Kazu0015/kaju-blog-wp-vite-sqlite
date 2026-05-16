@@ -1,0 +1,29 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-consept
+------------------------------
+*/
+.top-consept-text {
+    font-size: 16px;
+    text-align: center;
+
+    @include g.mq() {
+        font-size: 20px;
+    }
+}
+
+.top-consept-text02 {
+    margin-top: 24px;
+    text-align: center;
+
+    @include g.mq() {
+        margin-top: 32px;
+    }
+
+    span {
+        @include g.mq() {
+            display: block;
+        }
+    }
+}

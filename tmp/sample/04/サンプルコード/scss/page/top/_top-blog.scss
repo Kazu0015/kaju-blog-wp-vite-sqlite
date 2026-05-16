@@ -1,0 +1,22 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-blog
+------------------------------
+*/
+.top-blog {
+    &::before {
+        content: "";
+        display: block;
+        background-image: url(../img/bg-top-separate-sp.jpg);
+        height: 170px;
+        background-size: cover;
+        background-position: 100% 90%;
+
+        @include g.mq() {
+            background-image: url(../img/bg-top-separate.jpg);
+            background-position: 100% 76%;
+            height: 370px;
+        }
+    }
+}

@@ -1,0 +1,73 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-kv
+------------------------------
+*/
+.top-kv {
+    background-size: cover;
+    background-position: center;
+    background-image: url(../img/bg-top-kv-sp.jpg);
+    aspect-ratio: 360/500;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    @include g.mq() {
+        aspect-ratio: inherit;
+        height: 650px;
+        background-image: url(../img/bg-top-kv.jpg);
+    }
+}
+
+.top-kv-copy {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @include g.mq() {
+        gap: 32px;
+        margin-bottom: 40px;
+    }
+}
+
+.top-kv-copy-text {
+    font-family: var(--font-family-english);
+    text-align: center;
+    line-height: 1;
+
+    &:nth-child(1) {
+        font-size: 18px;
+        letter-spacing: 0.4em;
+        padding-left: 0.4em;
+
+        @include g.mq() {
+            font-size: 32px;
+        }
+    }
+
+    &:nth-child(2) {
+        font-size: 26px;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        padding-left: 0.4em;
+
+        @include g.mq() {
+            font-size: 54px;
+        }
+
+        @include g.mq(lg) {
+            font-size: 72px;
+        }
+    }
+
+    &:nth-child(3) {
+        letter-spacing: 0.2em;
+        padding-left: 0.2em;
+
+        @include g.mq() {
+            font-size: 24px;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+@use "../../global" as g;
+
+/*!
+page > single > single-article
+------------------------------
+*/
+.single-date {
+    margin-top: 16px;
+
+    @include g.mq() {
+        margin-top: 24px;
+    }
+}
+
+.single-title {
+    font-size: 22px;
+    margin-top: 4px;
+    line-height: 1.55;
+
+    @include g.mq() {
+        font-size: 26px;
+    }
+}

@@ -1,0 +1,40 @@
+@use "../../global" as g;
+
+/*!
+page > privacy-policy > header
+------------------------------
+*/
+.privacy-policy-header {
+  margin-bottom: 24px;
+  text-align: center;
+
+  @include g.mq(md) {
+    margin-bottom: 32px;
+  }
+}
+
+.privacy-policy-header__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 48px;
+  }
+}
+
+.privacy-policy-header__dates {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-disable);
+
+  @include g.mq(md) {
+    margin-top: 12px;
+    font-size: 16px;
+  }
+}

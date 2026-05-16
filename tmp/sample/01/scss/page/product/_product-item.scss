@@ -1,0 +1,55 @@
+@use "../../global" as g;
+
+/*!
+page > product > product-item
+------------------------------
+*/
+.product-item-inner {
+    @include g.mq() {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        align-items: center;
+        gap: 40px;
+    }
+
+    @include g.mq(lg) {
+        grid-template-columns: 420px 1fr;
+        gap: 80px;
+    }
+}
+
+.product-item-contents {
+    margin-top: 24px;
+
+    @include g.mq() {
+        margin-top: 0;
+    }
+}
+
+.product-item-name {
+    color: var(--color-font-black);
+    font-size: 22px;
+    font-weight: 500;
+
+    @include g.mq() {
+        font-size: 26px;
+    }
+}
+
+.product-item-text {
+    margin-top: 16px;
+
+    @include g.mq() {
+        margin-top: 24px;
+    }
+}
+
+.product-item-button {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+
+    @include g.mq() {
+        justify-content: flex-start;
+    }
+}

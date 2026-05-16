@@ -1,0 +1,54 @@
+@use "../global" as g;
+
+/*!
+layout > header
+------------------------------
+*/
+.header {
+    padding: 0 8px;
+    height: 60px;
+    background-color: var(--color-bg-white);
+    position: sticky;
+    left: 0;
+    top: 0;
+    border-bottom: 2px solid var(--color-border-primary);
+    z-index: var(--z-index-header);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @include g.mq() {
+        height: 75px;
+        padding: 0 16px;
+    }
+}
+
+.header-logo {
+    width: 120px;
+
+    @include g.mq() {
+        width: 150px;
+    }
+}
+
+.header-button-wrap {
+    display: flex;
+    gap: 4px;
+}
+
+.header-button {
+    a {
+        width: 85px;
+        font-size: 12px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        padding: 0;
+
+        @include g.mq() {
+            width: 120px;
+            font-size: 16px;
+            height: 42px;
+        }
+    }
+}

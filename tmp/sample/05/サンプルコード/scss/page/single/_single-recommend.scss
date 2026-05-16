@@ -1,0 +1,35 @@
+@use "../../global" as g;
+
+/*!
+page > single > single-recommend
+------------------------------
+*/
+.single-recommend {
+    margin-top: 56px;
+
+    @include g.mq() {
+        margin-top: 64px;
+    }
+}
+
+.single-recommend-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+
+    &::before {
+        content: "";
+        display: block;
+        margin: 0 auto;
+        width: 34px;
+        height: 34px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: url(../img/icon-mosha.png);
+    }
+}
+
+.single-recommend-posts {
+    margin-top: 40px;
+}

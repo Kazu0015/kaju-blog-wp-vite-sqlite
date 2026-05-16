@@ -1,0 +1,39 @@
+@use "../../global" as g;
+
+/*!
+page > profile > header
+------------------------------
+*/
+.profile-header {
+  margin-bottom: 32px;
+
+  @include g.mq(md) {
+    margin-bottom: 40px;
+  }
+}
+
+.profile-header__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 48px;
+  }
+}
+
+.profile-header__subtitle {
+  margin-top: 4px;
+  font-family: var(--font-family-serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  color: var(--color-disable);
+
+  @include g.mq(md) {
+    font-size: 20px;
+  }
+}

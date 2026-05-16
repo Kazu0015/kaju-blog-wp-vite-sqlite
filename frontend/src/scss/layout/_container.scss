@@ -1,0 +1,25 @@
+@use "../global" as g;
+
+/*!
+layout > container
+------------------------------
+*/
+%container {
+    padding-inline: 20px;
+    margin: 0 auto;
+}
+
+.l-container-l {
+    @extend %container;
+    max-width: calc(var(--width-content-l) + 20px * 2);
+}
+
+.l-container {
+    @extend %container;
+    max-width: calc(1100px + 20px * 2);
+}
+
+.l-container-s {
+    @extend %container;
+    max-width: calc(960px + 20px * 2);
+}

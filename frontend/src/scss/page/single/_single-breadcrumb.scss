@@ -1,0 +1,64 @@
+@use "../../global" as g;
+
+/*!
+page > single > breadcrumb
+------------------------------
+*/
+.single-breadcrumb {
+  padding: 20px 0 24px;
+
+  @include g.mq(md) {
+    padding: 32px 0 28px;
+  }
+}
+
+.single-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  list-style: none;
+}
+
+.single-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  &:not(:last-child)::after {
+    content: ">";
+    color: var(--color-disable);
+  }
+
+  &[aria-current="page"] {
+    color: var(--color-disable);
+  }
+}
+
+.single-breadcrumb__link {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  @include g.hover {
+    opacity: 0.6;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,13 @@
+@use "../../global" as g;
+
+/*!
+component > form > text
+------------------------------
+*/
+.c-input-text {
+    color: var(--color-font-black);
+    height: 100%;
+    width: 100%;
+    padding: 8px;
+    background-color: var(--color-bg-white);
+}

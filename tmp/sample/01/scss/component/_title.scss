@@ -1,0 +1,94 @@
+@use "../global" as g;
+
+/*!
+component > title
+------------------------------
+*/
+%title-english {
+    text-transform: uppercase;
+    color: var(--color-font-black);
+    letter-spacing: 0.4em;
+    font-family: var(--font-family-english);
+    font-weight: 700;
+    display: block;
+}
+
+/*! level1 */
+.c-title-level1 {
+    font-size: 14px;
+    color: var(--color-font-black);
+
+    @include g.mq() {
+        font-size: 18px;
+    }
+
+    &--center {
+        padding-left: 0.08em;
+        text-align: center;
+    }
+}
+
+.c-title-level1-english {
+    font-size: 24px;
+    @extend %title-english;
+
+    @include g.mq() {
+        font-size: 36px;
+    }
+
+    &--center {
+        text-align: center;
+        padding-left: 0.4em;
+    }
+}
+
+/*! level2 */
+.c-title-level2 {
+    font-size: 14px;
+    color: var(--color-font-black);
+    margin-top: 8px;
+
+    @include g.mq() {
+        font-size: 18px;
+    }
+
+    &--center {
+        text-align: center;
+        padding-left: 0.08em;
+    }
+}
+
+.c-title-level2-english {
+    font-size: 20px;
+    line-height: 1;
+    @extend %title-english;
+
+    @include g.mq() {
+        font-size: 32px;
+    }
+
+    span {
+        display: inline-block;
+    }
+
+    &--center {
+        text-align: center;
+        padding-left: 0.4em;
+    }
+}
+
+/*! level3 */
+.c-title-level3 {
+    font-size: 18px;
+    color: var(--color-font-black);
+    font-weight: 500;
+
+    @include g.mq() {
+        font-size: 20px;
+    }
+
+    &--center {
+        padding-left: 0.08em;
+        text-align: center;
+    }
+}

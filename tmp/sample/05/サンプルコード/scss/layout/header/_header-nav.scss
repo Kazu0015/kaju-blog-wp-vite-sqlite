@@ -1,0 +1,42 @@
+@use "../../global" as g;
+
+/*!
+layout > header > header-nav
+------------------------------
+*/
+.header-nav {
+    background-color: var(--color-bg-primary);
+    color: var(--color-font-white);
+    font-weight: bold;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.header-list {
+    display: flex;
+    overflow-x: scroll;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.header-item {
+    white-space: nowrap;
+    font-size: 12px;
+
+    @include g.mq() {
+        font-size: 14px;
+    }
+
+    &:not(:first-child) {
+        border-left: 1px solid var(--color-border-white);
+        padding-left: 16px;
+    }
+
+    &:not(:last-child) {
+        padding-right: 16px;
+    }
+}

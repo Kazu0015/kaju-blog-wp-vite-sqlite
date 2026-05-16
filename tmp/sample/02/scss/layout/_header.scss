@@ -1,0 +1,27 @@
+@use "../global" as g;
+
+/*!
+layout > header
+------------------------------
+*/
+.header {
+    height: 65px;
+    display: grid;
+    place-items: center;
+
+    @include g.mq() {
+        height: 100px;
+    }
+}
+
+.header-logo {
+    width: 150px;
+
+    @include g.mq() {
+        width: 220px;
+    }
+
+    img {
+        display: block;
+    }
+}

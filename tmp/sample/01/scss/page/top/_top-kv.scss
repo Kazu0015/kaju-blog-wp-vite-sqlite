@@ -1,0 +1,70 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-kv
+------------------------------
+*/
+.top-kv {
+    @include g.mq() {
+        position: relative;
+        height: 689px;
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        aspect-ratio: 360/200;
+        background-image: url(../img/bg-top-kv-sp.jpg);
+        background-position: center;
+        background-size: cover;
+
+        @include g.mq() {
+            width: calc(95% - 320px);
+            height: 100%;
+            padding-top: 0;
+            margin-left: auto;
+            background-image: url(../img/bg-top-kv.jpg);
+        }
+
+        @include g.mq(lg) {
+            width: calc(100% - ((100% - 1080px) / 2 + 320px));
+        }
+    }
+}
+
+.top-kv-inner {
+    margin-top: 24px;
+
+    @include g.mq() {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        margin-top: 0;
+    }
+}
+
+.top-kv-copy-text {
+    color: var(--color-font-black);
+    font-size: 24px;
+    line-height: 2.3;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+
+    @include g.mq() {
+        font-size: 40px;
+    }
+
+    span {
+        display: block;
+    }
+}
+
+.top-kv-button {
+    margin-top: 24px;
+
+    @include g.mq() {
+        margin-top: 96px;
+    }
+}

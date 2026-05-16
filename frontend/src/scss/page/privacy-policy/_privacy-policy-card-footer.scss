@@ -1,0 +1,76 @@
+@use "../../global" as g;
+
+/*!
+page > privacy-policy > card-footer
+------------------------------
+*/
+.privacy-policy-card-footer {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px dotted var(--color-border);
+
+  @include g.mq(md) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 48px;
+    padding-top: 40px;
+  }
+}
+
+.privacy-policy-card-footer__operator {
+  margin-bottom: 24px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  text-align: center;
+
+  @include g.mq(md) {
+    margin-bottom: 0;
+    font-size: 16px;
+    text-align: left;
+  }
+}
+
+.privacy-policy-card-footer__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 16px 32px;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+  text-align: center;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+
+  @include g.mq(md) {
+    width: auto;
+    min-width: 240px;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+
+  @include g.hover {
+    opacity: 0.85;
+    background-color: rgba(122, 158, 78, 0.08);
+  }
+
+  &:active {
+    opacity: 0.85;
+    background-color: rgba(122, 158, 78, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-main);
+    outline-offset: 2px;
+  }
+}

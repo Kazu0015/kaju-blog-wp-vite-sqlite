@@ -1,0 +1,63 @@
+@use "../global" as g;
+
+/*!
+component > button
+------------------------------
+*/
+.c-button {
+    color: var(--color-font-white);
+    background-color: var(--color-bg-black);
+    padding: 8px 16px;
+    font-family: var(--font-family-english);
+    text-transform: uppercase;
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+
+    @include g.mq() {
+        max-width: 240px;
+        height: 60px;
+        font-size: 18px;
+    }
+
+    @media (any-hover: hover) {
+        &:hover {
+            &::after {
+                width: 34px;
+            }
+        }
+    }
+
+    &::after {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 1px;
+        background-color: var(--color-bg-white);
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+
+        @include g.mq() {
+            width: 28px;
+            transition: width 0.3s;
+        }
+    }
+
+    &--white {
+        color: var(--color-font-base);
+        background-color: var(--color-bg-white);
+
+        &::after {
+            background-color: var(--color-bg-black);
+        }
+    }
+
+    &--center {
+        margin: 0 auto;
+    }
+}

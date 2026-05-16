@@ -1,0 +1,26 @@
+@use "../../global" as g;
+
+/*!
+page > single > featured
+------------------------------
+*/
+.single-featured {
+  margin-bottom: 36px;
+
+  @include g.mq(md) {
+    margin-bottom: 48px;
+  }
+}
+
+.single-featured__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.single-featured__image--no-image {
+  object-fit: contain;
+  background-color: var(--color-base-dark);
+}

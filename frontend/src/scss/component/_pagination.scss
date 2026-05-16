@@ -1,0 +1,62 @@
+@use "../global" as g;
+
+/*!
+component > pagination
+------------------------------
+*/
+.c-pagination {
+  margin-top: 48px;
+
+  @include g.mq(md) {
+    margin-top: 56px;
+  }
+}
+
+.c-pagination__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+}
+
+.c-pagination__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-contrast);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+  @include g.hover {
+    background-color: var(--color-peach);
+    color: var(--color-white);
+    border-color: var(--color-peach);
+  }
+
+  &:active {
+    background-color: var(--color-peach);
+    color: var(--color-white);
+    border-color: var(--color-peach);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &.is-current,
+  &[aria-current="page"] {
+    background-color: var(--color-peach);
+    color: var(--color-white);
+    border-color: var(--color-peach);
+  }
+}

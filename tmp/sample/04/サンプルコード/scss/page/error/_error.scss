@@ -1,0 +1,15 @@
+@use "../../global" as g;
+
+/*!
+page > error > error
+------------------------------
+*/
+.error-text {
+    text-align: center;
+
+    span {
+        @include g.mq() {
+            display: block;
+        }
+    }
+}

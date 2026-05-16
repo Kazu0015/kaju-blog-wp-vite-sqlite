@@ -1,0 +1,24 @@
+@use "../global" as g;
+
+/*!
+component > posts
+------------------------------
+*/
+.c-posts {
+    display: grid;
+    gap: 40px 30px;
+    grid-template-columns: repeat(1, 1fr);
+
+    &--col3 {
+        @include g.mq(sm) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &--col3 {
+        @include g.mq() {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px 30px;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+@use "../global" as g;
+
+/*!
+layout > page-body
+------------------------------
+*/
+.l-page-body {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

@@ -1,0 +1,19 @@
+@use "../../global" as g;
+
+/*!
+component > form > checkbox
+------------------------------
+*/
+.c-input-checkbox {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}

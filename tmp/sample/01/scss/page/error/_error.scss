@@ -1,0 +1,28 @@
+@use "../../global" as g;
+
+/*!
+page > error > error
+------------------------------
+*/
+.error-text {
+    text-align: center;
+    margin-top: 32px;
+
+    @include g.mq() {
+        margin-top: 40px;
+    }
+
+    span {
+        @include g.mq() {
+            display: block;
+        }
+    }
+}
+
+.error-button {
+    margin-top: 32px;
+
+    @include g.mq() {
+        margin-top: 40px;
+    }
+}

@@ -1,0 +1,23 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-instagram
+------------------------------
+*/
+.top-instagram-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+
+    @include g.mq() {
+        gap: 24px;
+    }
+}
+
+.top-instagram-button {
+    margin-top: 48px;
+
+    @include g.mq() {
+        margin-top: 80px;
+    }
+}

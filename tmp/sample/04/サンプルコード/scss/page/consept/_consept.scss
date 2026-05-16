@@ -1,0 +1,30 @@
+@use "../../global" as g;
+
+/*!
+page > consept > consept
+------------------------------
+*/
+.consept-text {
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.75;
+
+    @include g.mq() {
+        font-size: 20px;
+    }
+}
+
+.consept-text02 {
+    margin-top: 24px;
+    text-align: center;
+
+    @include g.mq() {
+        margin-top: 32px;
+    }
+
+    span {
+        @include g.mq() {
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,11 @@
+@use "../global" as g;
+
+/*!
+component > meta
+------------------------------
+*/
+.c-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

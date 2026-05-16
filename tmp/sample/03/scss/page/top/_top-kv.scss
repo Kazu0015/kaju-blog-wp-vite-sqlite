@@ -1,0 +1,95 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-kv
+------------------------------
+*/
+.top-kv {
+    padding: 40px 0;
+    background-color: var(--color-bg-primary-light);
+    background-position: center;
+    background-size: 65px;
+    border-bottom: 2px solid var(--color-border-primary);
+    background-image: url(../img/bg-pattern-kv.png);
+
+    @include g.mq() {
+        background-size: 75px;
+        padding: 56px 0;
+    }
+}
+
+.top-kv-inner {
+    @include g.mq() {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        align-items: center;
+    }
+}
+
+.top-kv-text {
+    text-align: center;
+    max-width: 550px;
+
+    @include g.mq() {
+        text-align: left;
+    }
+}
+
+.top-kv-copy {
+    color: var(--color-font-primary);
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    padding-left: 0.05em;
+
+    span {
+        display: inline-block;
+    }
+
+    @include g.mq() {
+        padding-left: 0;
+    }
+}
+
+.top-kv-copy02 {
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    padding-left: 0.1em;
+    color: var(--color-font-black);
+    margin-top: 8px;
+
+    span {
+        display: inline-block;
+    }
+
+    @include g.mq() {
+        font-size: 38px;
+        margin-top: 0;
+        padding-left: 0;
+    }
+}
+
+.top-kv-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    max-width: 480px;
+    margin: 24px auto 0;
+
+    @include g.mq() {
+        margin: 32px 0 0 0;
+        justify-content: flex-start;
+    }
+}
+
+.top-kv-item {
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: var(--color-bg-primary);
+    line-height: 1;
+    padding: 4px 8px;
+    color: var(--color-font-white);
+}

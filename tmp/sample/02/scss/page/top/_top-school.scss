@@ -1,0 +1,49 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-school
+------------------------------
+*/
+.top-school-table-row {
+    border-bottom: 1px solid var(--color-border-white);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 20px 0;
+
+    &:first-child {
+        padding-top: 0;
+    }
+
+    @include g.mq() {
+        grid-template-columns: 30% 70%;
+    }
+}
+
+.top-school-table-recommend-list {
+    list-style: inside;
+}
+
+.top-school-message {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 40px;
+    line-height: 1.75;
+
+    @include g.mq() {
+        font-size: 24px;
+        margin-top: 56px;
+    }
+
+    span {
+        display: block;
+
+        @include g.mq() {
+            display: inline;
+        }
+    }
+}
+
+.top-school-button {
+    margin-top: 24px;
+}

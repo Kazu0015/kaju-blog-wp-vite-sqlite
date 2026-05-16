@@ -1,0 +1,80 @@
+@use "../../global" as g;
+
+/*!
+page > shoplist > shoplist
+------------------------------
+*/
+.shoplist-list {
+    display: grid;
+    gap: 40px 16px;
+    grid-template-columns: repeat(1, 1fr);
+
+    @include g.mq(sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include g.mq() {
+        gap: 48px 32px;
+    }
+}
+
+.shoplist-item {
+    @include g.mq(xl) {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        align-items: center;
+    }
+}
+
+.shoplist-item-info {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    @include g.mq(xl) {
+        margin: 0 0 0 24px;
+    }
+}
+
+.shoplist-item-name {
+    font-size: 16px;
+    line-height: 1.55;
+
+    @include g.mq() {
+        font-size: 20px;
+    }
+}
+
+.shoplist-item-adress {
+    font-size: 12px;
+    line-height: 1.55;
+
+    @include g.mq() {
+        font-size: 14px;
+    }
+}
+
+.shoplist-item-tel {
+    font-size: 18px;
+    font-family: var(--font-family-english);
+
+    @include g.mq() {
+        font-size: 22px;
+    }
+}
+
+.shoplist-item-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.shoplist-item-detail-item {
+    font-size: 12px;
+    line-height: 1.55;
+
+    @include g.mq() {
+        font-size: 14px;
+    }
+}

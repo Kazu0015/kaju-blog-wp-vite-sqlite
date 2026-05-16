@@ -1,0 +1,50 @@
+@use "../global" as g;
+
+/*!
+component > cta
+------------------------------
+*/
+.c-cta {
+    background-color: var(--color-bg-secondary);
+    text-align: center;
+    font-weight: bold;
+    color: var(--color-font-white);
+    padding: 48px 0;
+
+    @include g.mq() {
+        padding: 64px 0;
+    }
+}
+
+.c-cta-msg {
+    font-size: 24px;
+
+    @include g.mq() {
+        font-size: 32px;
+    }
+
+    span {
+        display: inline-block;
+    }
+}
+
+.c-cta-ms02g {
+    font-size: 16px;
+    margin-top: 8px;
+
+    @include g.mq() {
+        font-size: 18px;
+    }
+}
+
+.c-cta-button {
+    margin-top: 24px;
+
+    a {
+        max-width: 300px;
+        height: 68px;
+        font-size: 18px;
+        display: grid;
+        place-items: center;
+    }
+}

@@ -1,0 +1,48 @@
+@use "../global" as g;
+
+/*!
+component > large-button
+------------------------------
+*/
+.c-large-button {
+    color: var(--color-font-base);
+    background-color: var(--color-bg-black);
+    width: 100%;
+    max-width: 280px;
+    height: 60px;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    line-height: 1;
+    border: 1px solid var(--color-border-white);
+    display: grid;
+    place-items: center;
+    position: relative;
+    padding: 0 16px 0 calc(16px + 0.2em);
+
+    @include g.mq() {
+        max-width: 685px;
+        height: 90px;
+        font-size: 32px;
+    }
+
+    &::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 1px;
+        background-color: var(--color-bg-white);
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%) translateX(15px);
+
+        @include g.mq() {
+            width: 70px;
+            transform: translateY(-50%) translateX(20px);
+        }
+    }
+
+    &--center {
+        margin: 0 auto;
+    }
+}

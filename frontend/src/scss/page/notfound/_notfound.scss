@@ -1,0 +1,169 @@
+@use "../../global" as g;
+
+/*!
+page > notfound
+------------------------------
+*/
+
+/* Sticky Footer で伸びた main の中でカードを縦中央に（他ページの main は触らない） */
+main:has(.notfound) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 2rem;
+  min-height: 0;
+}
+
+.notfound {
+  /* main の padding で外周が取れるため、上下の二重余白を避ける */
+  padding: 0;
+}
+
+.notfound__panel {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: 36px 24px 40px;
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(61, 43, 31, 0.07);
+
+  @include g.mq(md) {
+    padding: 48px 56px 56px;
+  }
+}
+
+.notfound__layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+
+  @include g.mq(md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    text-align: left;
+  }
+}
+
+.notfound__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 420px;
+
+  @include g.mq(md) {
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.notfound__heading {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-main);
+}
+
+.notfound__code {
+  display: block;
+  font-size: clamp(56px, 14vw, 96px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.notfound__heading-text {
+  display: block;
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+
+  @include g.mq(md) {
+    margin-top: 16px;
+    font-size: 24px;
+  }
+}
+
+.notfound__text {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  color: var(--color-main);
+  font-weight: 500;
+
+  @include g.mq(md) {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+}
+
+.notfound__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  min-height: 52px;
+  padding: 14px 28px;
+  background-color: var(--color-accent);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+
+  @include g.mq(md) {
+    margin-top: 32px;
+    min-height: 56px;
+    padding: 16px 36px;
+    font-size: 16px;
+  }
+
+  @include g.hover {
+    opacity: 0.88;
+  }
+
+  &:active {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-main);
+    outline-offset: 3px;
+  }
+}
+
+.notfound__button-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.notfound__figure {
+  margin: 0;
+  flex-shrink: 0;
+  // width: min(72vw, 280px);
+  width: min(36vw, 280px);
+
+  @include g.mq(md) {
+    // width: min(38%, 320px);
+    width: min(34%, 320px);
+    max-width: 360px;
+  }
+}
+
+.notfound__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}

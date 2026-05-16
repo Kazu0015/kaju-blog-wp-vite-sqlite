@@ -1,0 +1,32 @@
+@use "../global" as g;
+
+/*!
+component > products
+------------------------------
+*/
+.c-products {
+    display: grid;
+    gap: 48px 24px;
+    grid-template-columns: repeat(1, 1fr);
+
+    &--col2,
+    &--col3 {
+        @include g.mq(sm) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include g.mq() {
+            gap: 48px 40px;
+        }
+
+        @include g.mq(lg) {
+            gap: 80px;
+        }
+    }
+
+    &--col3 {
+        @include g.mq(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+}

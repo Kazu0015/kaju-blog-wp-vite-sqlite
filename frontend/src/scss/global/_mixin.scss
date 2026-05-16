@@ -1,0 +1,13 @@
+/*!
+global > mixin
+------------------------------
+*/
+
+// ホバー可能デバイスにのみ :hover を適用する
+@mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}

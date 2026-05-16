@@ -1,0 +1,33 @@
+@use "../../global" as g;
+
+/*!
+page > top > common
+------------------------------
+*/
+.top-img-separate {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    aspect-ratio: 360/180;
+
+    @include g.mq(lg) {
+        aspect-ratio: inherit;
+        height: 640px;
+    }
+
+    &--lineup {
+        background-image: url(../img/bg-lineup-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-lineup.jpg);
+        }
+    }
+
+    &--instagram {
+        background-image: url(../img/bg-instagram-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-instagram.jpg);
+        }
+    }
+}

@@ -1,0 +1,119 @@
+@use "../global" as g;
+
+/*!
+component > card-log
+------------------------------
+*/
+.c-log-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.c-log-card__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 16px;
+}
+
+.c-log-card__image--no-image {
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background-color: var(--color-base-dark);
+}
+
+.c-log-card__body {
+  margin-top: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.c-log-card__date {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  text-align: left;
+}
+
+.c-log-card__title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  color: var(--color-main);
+  text-align: left;
+
+  @include g.mq(lg) {
+    font-size: 28px;
+  }
+}
+
+.c-log-card__meta {
+  margin-top: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.c-log-card__meta-badge {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+  padding: 4px 8px;
+  border-radius: 50px;
+  min-width: 100px;
+  background-color: var(--color-main);
+  color: var(--color-white);
+  text-align: center;
+
+  @include g.mq(md) {
+    font-size: 22px;
+    padding: 4px 8px;
+  }
+}
+
+.c-log-card__meta-badge--peach {
+  background-color: var(--color-peach);
+}
+
+.c-log-card__meta-badge--plum {
+  background-color: var(--color-plum);
+}
+
+.c-log-card__meta-badge--grape {
+  background-color: var(--color-grape);
+}
+
+.c-log-card__meta-badge--blueberry {
+  background-color: var(--color-blueberry);
+}
+
+.c-log-card__meta-badge--prune {
+  background-color: var(--color-prune);
+}
+
+.c-log-card__meta-badge--cherry {
+  background-color: var(--color-cherry);
+}
+
+.c-log-card__meta-like {
+  width: 32px;
+  height: auto;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+
+  &.is-liked {
+    filter: brightness(0) saturate(100%) invert(20%) sepia(90%) saturate(5000%) hue-rotate(310deg) brightness(92%);
+  }
+}

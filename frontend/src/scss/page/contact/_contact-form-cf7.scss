@@ -1,0 +1,62 @@
+@use "../../global" as g;
+
+/*!
+page > contact > Contact Form 7
+------------------------------
+マークアップは静的 contact.html と同じ .contact-form__* を使用。
+ここは CF7 固有の微調整のみ（スタイルの二重定義はしない）。
+*/
+.contact-form__cf7 {
+    .wpcf7-form-control-wrap {
+        display: block;
+        min-width: 0;
+    }
+
+    /* CF7 が挿入する改行 */
+    br {
+        display: none;
+    }
+
+    .wpcf7-spinner {
+        margin-left: 12px;
+    }
+
+    .wpcf7-not-valid-tip {
+        margin-top: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #c0392b;
+
+        @include g.mq(md) {
+            font-size: 16px;
+        }
+    }
+
+    .wpcf7-response-output {
+        margin: 24px 0 0;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.7;
+        letter-spacing: 0.02em;
+
+        @include g.mq(md) {
+            font-size: 18px;
+        }
+    }
+
+    /* acceptance: ラベル内にチェックボックスが入る */
+    .wpcf7-list-item {
+        margin: 0;
+    }
+
+    .wpcf7-form-control.wpcf7-acceptance {
+        display: inline;
+        width: auto;
+        min-height: 0;
+        padding: 0;
+        border: none;
+        background: none;
+    }
+}

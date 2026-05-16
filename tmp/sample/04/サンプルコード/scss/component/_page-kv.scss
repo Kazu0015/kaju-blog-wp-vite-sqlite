@@ -1,0 +1,57 @@
+@use "../global" as g;
+
+/*!
+component > page-kv
+------------------------------
+*/
+.c-page-kv {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    background-position: center;
+    background-size: cover;
+
+    @include g.mq() {
+        height: 460px;
+    }
+
+    &--consept {
+        background-image: url(../img/bg-consept-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-consept-kv.jpg);
+        }
+    }
+
+    &--menu {
+        background-image: url(../img/bg-menu-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-menu-kv.jpg);
+        }
+    }
+
+    &--shoplist {
+        background-image: url(../img/bg-shoplist-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-shoplist-kv.jpg);
+        }
+    }
+
+    &--blog {
+        background-image: url(../img/bg-blog-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-blog-kv.jpg);
+        }
+    }
+
+    &--error {
+        background-image: url(../img/bg-error-kv-sp.jpg);
+
+        @include g.mq() {
+            background-image: url(../img/bg-error-kv.jpg);
+        }
+    }
+}

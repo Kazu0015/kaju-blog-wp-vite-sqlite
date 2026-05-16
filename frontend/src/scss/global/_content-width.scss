@@ -1,0 +1,8 @@
+/*!
+global > content-width
+------------------------------
+*/
+:root {
+  --width-content:   calc(1100px + 2 * 20px);
+  --width-content-l: calc(1200px + 2 * 20px);
+}

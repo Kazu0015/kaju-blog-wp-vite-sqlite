@@ -1,0 +1,52 @@
+@use "../../global" as g;
+
+/*!
+component > form > checkbox
+------------------------------
+*/
+.c-input-checkbox {
+    &:checked {
+        + .c-input-checkbox-text {
+            &:before {
+                border: 1px solid var(--color-font-link);
+                background-color: var(--color-font-link);
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                border: solid #fff;
+                border-width: 0 2px 2px 0;
+                left: 6px;
+                top: 8px;
+                width: 6px;
+                height: 10px;
+                transform: translateY(-2px) rotate(45deg);
+            }
+        }
+    }
+
+    &:focus-visible {
+        + .c-input-checkbox-text {
+            border-bottom: 2px solid var(--color-font-link);
+        }
+    }
+}
+
+.c-input-checkbox-text {
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    &:before {
+        content: "";
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 1px solid var(--color-border-gray);
+        border-radius: 3px;
+        margin-right: 8px;
+        flex-shrink: 0;
+    }
+}

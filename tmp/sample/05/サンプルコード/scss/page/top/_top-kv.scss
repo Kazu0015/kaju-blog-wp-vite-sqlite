@@ -1,0 +1,109 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-kv
+------------------------------
+*/
+.top-kv {
+    background-image: url(../img/bg-pattern-kv.png);
+    background-size: 140px;
+    position: relative;
+    padding: 56px 0 8px;
+
+    @include g.mq() {
+        padding: 40px 0;
+    }
+}
+
+.top-kv-treat {
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    width: 180px;
+
+    @include g.mq() {
+        bottom: 25px;
+        width: 250px;
+    }
+}
+
+.top-kv-inner {
+    position: relative;
+    z-index: var(--z-index-default);
+
+    @include g.mq() {
+        display: grid;
+        grid-template-columns: 1fr 200px;
+        gap: 40px;
+        align-items: center;
+    }
+}
+
+.top-kv-recommend-link {
+    display: block;
+    border: 1px solid var(--color-border-primary);
+    border-radius: 20px;
+    overflow: hidden;
+
+    @include g.mq() {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.top-kv-recommend-thumbnail {
+    @include g.mq() {
+        order: 1;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.top-kv-recommend-body {
+    padding: 16px;
+    background-color: var(--color-bg-white);
+
+    @include g.mq() {
+        padding: 24px;
+    }
+
+    @include g.mq(lg) {
+        padding: 58px 48px;
+    }
+}
+
+.top-kv-recommend-title {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.6;
+
+    @include g.mq() {
+        margin-top: 10px;
+        font-size: 20px;
+    }
+}
+
+.top-kv-recommend-date {
+    text-align: right;
+    margin-top: 10px;
+
+    @include g.mq() {
+        margin-top: 48px;
+    }
+}
+
+.top-kv-character {
+    width: 40%;
+    max-width: 200px;
+    margin-left: auto;
+
+    @include g.mq() {
+        width: 100%;
+        max-width: none;
+    }
+}

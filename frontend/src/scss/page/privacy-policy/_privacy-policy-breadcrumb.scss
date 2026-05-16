@@ -1,0 +1,70 @@
+@use "../../global" as g;
+
+/*!
+page > privacy-policy > breadcrumb
+------------------------------
+*/
+.privacy-policy-breadcrumb {
+  padding: 20px 0 24px;
+
+  @include g.mq(md) {
+    padding: 32px 0 28px;
+  }
+}
+
+.privacy-policy-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  list-style: none;
+}
+
+.privacy-policy-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  &:not(:last-child)::after {
+    content: ">";
+    color: var(--color-disable);
+  }
+
+  &[aria-current="page"] {
+    color: var(--color-disable);
+  }
+}
+
+.privacy-policy-breadcrumb__link {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  @include g.hover {
+    opacity: 0.6;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

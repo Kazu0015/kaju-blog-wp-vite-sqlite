@@ -1,0 +1,83 @@
+@use "../../global" as g;
+
+/*!
+page > single > nav
+------------------------------
+*/
+.single-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 28px;
+
+  @include g.mq(md) {
+    padding: 36px 0;
+    margin-bottom: 36px;
+  }
+}
+
+.single-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-main);
+  transition: opacity 0.3s ease;
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  @include g.hover {
+    opacity: 0.6;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.single-nav__arrow {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-disable);
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+}
+
+.single-back {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 80px;
+
+  @include g.mq(md) {
+    padding-bottom: 120px;
+  }
+}
+
+.single-back__link {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-main);
+  transition: opacity 0.3s ease;
+
+  @include g.mq(md) {
+    font-size: 24px;
+  }
+
+  @include g.hover {
+    opacity: 0.6;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}

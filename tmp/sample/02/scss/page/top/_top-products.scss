@@ -1,0 +1,83 @@
+@use "../../global" as g;
+
+/*!
+page > top > top-products
+------------------------------
+*/
+.top-products {
+    background-color: var(--color-bg-base-light);
+}
+
+.top-products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    @include g.mq() {
+        gap: 56px;
+    }
+}
+
+.top-products-item {
+    @include g.mq() {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &:nth-child(odd) {
+        flex-direction: row-reverse;
+    }
+}
+
+.top-products-item-img {
+    @include g.mq() {
+        width: 40%;
+        max-width: 400px;
+    }
+}
+
+.top-products-item-body {
+    margin-top: 24px;
+
+    @include g.mq() {
+        width: calc(60% - 64px);
+        margin-top: 0;
+    }
+}
+
+.top-products-item-title {
+    font-family: var(--font-family-english);
+    letter-spacing: 0.2em;
+    font-size: 16px;
+    line-height: 1;
+
+    @include g.mq() {
+        font-size: 24px;
+    }
+
+    &::after {
+        content: "";
+        display: block;
+        width: 100%;
+        max-width: 324px;
+        height: 1px;
+        background-color: var(--color-bg-white);
+        margin-top: 12px;
+
+        @include g.mq() {
+            margin-top: 24px;
+        }
+    }
+}
+
+.top-products-item-text {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include g.mq() {
+        margin-top: 24px;
+        gap: 24px;
+    }
+}

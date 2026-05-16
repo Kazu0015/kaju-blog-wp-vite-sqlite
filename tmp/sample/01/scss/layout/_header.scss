@@ -1,0 +1,42 @@
+@use "../global" as g;
+
+/*!
+layout > header
+------------------------------
+*/
+.header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+
+    @include g.mq() {
+        height: 80px;
+        padding: 0 32px;
+    }
+}
+
+.header-logo {
+    width: 70px;
+
+    @include g.mq() {
+        width: 85px;
+    }
+
+    img {
+        display: block;
+    }
+}
+
+.header-cart {
+    width: 24px;
+
+    @include g.mq() {
+        width: 26px;
+    }
+
+    img {
+        display: block;
+    }
+}

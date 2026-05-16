@@ -1,0 +1,17 @@
+@use "../../global" as g;
+
+/*!
+page > single > single-contents
+------------------------------
+*/
+.single-contents {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    @include g.mq() {
+        margin-top: 48px;
+        gap: 40px;
+    }
+}

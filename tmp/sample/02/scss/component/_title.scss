@@ -1,0 +1,39 @@
+@use "../global" as g;
+
+/*!
+component > title
+------------------------------
+*/
+.c-title-level2-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.c-title-level2 {
+    letter-spacing: 0.08em;
+    font-size: 14px;
+    line-height: 1.6;
+
+    &--center {
+        text-align: center;
+        padding-left: 0.08em;
+    }
+}
+
+.c-title-level2-english {
+    font-family: var(--font-family-english);
+    letter-spacing: 0.2em;
+    font-size: 24px;
+    display: block;
+    line-height: 1;
+
+    @include g.mq() {
+        font-size: 48px;
+    }
+
+    &--center {
+        text-align: center;
+        padding-left: 0.2em;
+    }
+}
