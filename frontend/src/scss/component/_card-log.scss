@@ -57,6 +57,23 @@ component > card-log
   }
 }
 
+.c-log-card__excerpt {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  text-align: left;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+
+  @include g.mq(md) {
+    font-size: 18px;
+  }
+}
+
 .c-log-card__meta {
   margin-top: auto;
   display: flex;
