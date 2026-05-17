@@ -9,6 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_filter( 'wpcf7_autop_or_not', '__return_false' );
 add_filter( 'wpcf7_form_elements', 'kaju_blog_cf7_form_elements' );
+add_filter( 'wpcf7_form_elements', 'kaju_blog_cf7_disable_submit_button', 25 );
 add_action( 'wp_enqueue_scripts', 'kaju_blog_dequeue_cf7_default_styles', 20 );
 
 /**
@@ -44,6 +45,29 @@ function kaju_blog_cf7_form_elements( string $content ): string {
 	if ( str_contains( $content, 'contact-form__fields' ) ) {
 		$content = preg_replace( '#</?p(?:\s[^>]*)?>#i', '', $content );
 		$content = preg_replace( '#<br\s*/?>#i', '', $content );
+	}
+
+	return $content;
+}
+
+/**
+ * お問い合わせページの送信ボタンを無効化（送信不可）
+ */
+function kaju_blog_cf7_disable_submit_button( string $content ): string {
+	if ( ! is_page( 'contact' ) ) {
+		return $content;
+	}
+
+	$replaced = preg_replace(
+		'/(<input\b[^>]*\bclass="[^"]*\bcontact-form__submit\b[^"]*"[^>]*)(>)/i',
+		'$1 disabled aria-disabled="true"$2',
+		$content,
+		1,
+		$count
+	);
+
+	if ( 1 === $count && is_string( $replaced ) ) {
+		return $replaced;
 	}
 
 	return $content;

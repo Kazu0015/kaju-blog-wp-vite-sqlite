@@ -225,4 +225,19 @@ page > contact > form
         outline: 2px solid var(--color-main);
         outline-offset: 2px;
     }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+        opacity: 0.45;
+        cursor: not-allowed;
+        pointer-events: none;
+
+        @include g.hover {
+            opacity: 0.45;
+        }
+
+        &:active {
+            opacity: 0.45;
+        }
+    }
 }
