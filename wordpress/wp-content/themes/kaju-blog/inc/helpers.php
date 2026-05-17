@@ -23,6 +23,33 @@ function kaju_blog_asset_uri( string $path = '' ): string {
 }
 
 /**
+ * 固定ページ URL（未作成時はスラッグパスへフォールバック）
+ */
+function kaju_blog_page_url( string $slug ): string {
+	$slug = trim( $slug, '/' );
+	$page = get_page_by_path( $slug, OBJECT, 'page' );
+
+	if ( $page instanceof WP_Post && 'publish' === $page->post_status ) {
+		return get_permalink( $page );
+	}
+
+	return home_url( '/' . $slug . '/' );
+}
+
+/**
+ * プライバシーポリシー URL（WP 設定 → 固定ページがあれば優先）
+ */
+function kaju_blog_privacy_policy_url(): string {
+	$url = get_privacy_policy_url();
+
+	if ( is_string( $url ) && '' !== $url ) {
+		return $url;
+	}
+
+	return kaju_blog_page_url( 'privacy-policy' );
+}
+
+/**
  * 果樹ターム slug => CSS modifier / ラベル
  *
  * @return array<string, array{label: string, modifier: string}>
@@ -178,15 +205,26 @@ function kaju_blog_fruit_archive_url( string $slug ): string {
 }
 
 /**
- * 投稿の果樹バッジ modifier（record / tree 共通）
+ * 投稿に付いた果樹タームの slug
  */
-function kaju_blog_record_fruit_modifier( int $post_id ): string {
+function kaju_blog_get_post_fruit_slug( int $post_id ): string {
 	$terms = get_the_terms( $post_id, 'fruit' );
 	if ( ! $terms || is_wp_error( $terms ) ) {
 		return '';
 	}
-	$slug = $terms[0]->slug;
-	$map  = kaju_blog_fruit_map();
+
+	return $terms[0]->slug;
+}
+
+/**
+ * 投稿の果樹バッジ modifier（record / tree 共通）
+ */
+function kaju_blog_record_fruit_modifier( int $post_id ): string {
+	$slug = kaju_blog_get_post_fruit_slug( $post_id );
+	if ( '' === $slug ) {
+		return '';
+	}
+	$map = kaju_blog_fruit_map();
 	return $map[ $slug ]['modifier'] ?? $slug;
 }
 
@@ -194,13 +232,13 @@ function kaju_blog_record_fruit_modifier( int $post_id ): string {
  * 投稿の果樹ラベル（record / tree 共通）
  */
 function kaju_blog_record_fruit_label( int $post_id ): string {
-	$terms = get_the_terms( $post_id, 'fruit' );
-	if ( ! $terms || is_wp_error( $terms ) ) {
+	$slug = kaju_blog_get_post_fruit_slug( $post_id );
+	if ( '' === $slug ) {
 		return '';
 	}
-	$slug = $terms[0]->slug;
-	$map  = kaju_blog_fruit_map();
-	return $map[ $slug ]['label'] ?? $terms[0]->name;
+	$terms = get_the_terms( $post_id, 'fruit' );
+	$map   = kaju_blog_fruit_map();
+	return $map[ $slug ]['label'] ?? ( $terms[0]->name ?? $slug );
 }
 
 /**

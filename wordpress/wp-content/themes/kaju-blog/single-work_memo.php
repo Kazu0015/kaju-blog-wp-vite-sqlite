@@ -61,14 +61,14 @@ while ( have_posts() ) :
 				<?php if ( $prev instanceof WP_Post ) : ?>
 					<a href="<?php echo esc_url( get_permalink( $prev ) ); ?>" class="single-nav__link">
 						<span class="single-nav__arrow">&lt;</span>
-						前のメモへ
+						以前の記事へ
 					</a>
 				<?php else : ?>
 					<span class="single-nav__link" aria-hidden="true"></span>
 				<?php endif; ?>
 				<?php if ( $next instanceof WP_Post ) : ?>
 					<a href="<?php echo esc_url( get_permalink( $next ) ); ?>" class="single-nav__link">
-						次のメモへ
+						新しい記事へ
 						<span class="single-nav__arrow">&gt;</span>
 					</a>
 				<?php else : ?>

@@ -19,8 +19,9 @@ while ( have_posts() ) :
 	$thumb_class = 'single-featured__image' . ( $has_thumb ? '' : ' single-featured__image--no-image' );
 	$archive  = get_post_type_archive_link( 'record' ) ?: home_url( '/records/' );
 
-	$prev = kaju_blog_get_adjacent_post( true, $post_id, 'fruit' );
-	$next = kaju_blog_get_adjacent_post( false, $post_id, 'fruit' );
+	// 一覧と同じく全栽培記録を公開日順で辿る（果樹タームで絞らない）
+	$prev = kaju_blog_get_adjacent_post( true, $post_id );
+	$next = kaju_blog_get_adjacent_post( false, $post_id );
 	?>
 
 <main>

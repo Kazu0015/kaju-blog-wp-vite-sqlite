@@ -10,7 +10,11 @@ defined( 'ABSPATH' ) || exit;
 /** サンプル定義を変えたらバージョンを上げる */
 const KAJU_BLOG_SEED_RECORDS_VERSION = '2.1.0';
 
+/** ページネーション用サンプルの文面を変えたらバージョンを上げる */
+const KAJU_BLOG_SEED_PAGINATION_RECORDS_VERSION = '1.1.0';
+
 add_action( 'init', 'kaju_blog_maybe_seed_sample_records', 30 );
+add_action( 'init', 'kaju_blog_maybe_refresh_pagination_records', 31 );
 
 /**
  * 初回のみサンプル投稿を投入（既存スラッグはスキップ）
@@ -105,63 +109,211 @@ function kaju_blog_import_theme_image( string $theme_relative ): int {
 }
 
 /**
- * ページネーション確認用の追加投稿（既存スラッグはスキップ）
+ * 初回・文面更新時にページネーション用サンプルを投入・更新
+ */
+function kaju_blog_maybe_refresh_pagination_records(): void {
+	if ( KAJU_BLOG_SEED_PAGINATION_RECORDS_VERSION === get_option( 'kaju_blog_seed_pagination_records_version', '' ) ) {
+		return;
+	}
+
+	kaju_blog_seed_pagination_records();
+	update_option( 'kaju_blog_seed_pagination_records_version', KAJU_BLOG_SEED_PAGINATION_RECORDS_VERSION, false );
+}
+
+/**
+ * ページネーション確認用の追加投稿（一覧件数を増やすためのサンプル）
  *
  * @return list<array<string, mixed>>
  */
 function kaju_blog_pagination_record_definitions(): array {
-	$fruits  = array( 'peach', 'plum', 'grape', 'blueberry', 'cherry', 'prune' );
-	$images  = array(
-		'img/top/photo-peach.webp',
-		'img/top/photo-plum.webp',
-		'img/top/photo-grape.webp',
-		'img/top/photo-blueberry.webp',
-		'img/top/photo-cherry.webp',
-		'img/top/photo-prune.webp',
-	);
-	$records = array();
-
-	for ( $i = 1; $i <= 12; $i++ ) {
-		$n      = str_pad( (string) $i, 2, '0', STR_PAD_LEFT );
-		$fruit  = $fruits[ ( $i - 1 ) % count( $fruits ) ];
-		$image  = $images[ ( $i - 1 ) % count( $images ) ];
-		$month  = str_pad( (string) ( ( $i % 12 ) + 1 ), 2, '0', STR_PAD_LEFT );
-
-		$records[] = array(
-			'slug'           => 'record-pagination-' . $n,
-			'title'          => sprintf( '栽培記録（ページネーション確認 %s）', $n ),
-			'fruit'          => $fruit,
-			'date'           => sprintf( '2023-%s-15 10:00:00', $month ),
-			'excerpt'        => '一覧のページ送り動作を確認するためのサンプル投稿です。',
-			'intro'          => sprintf( 'これはページネーション確認用の栽培記録 %d 件目です。文面・画像は仮の内容です。', $i ),
-			'featured_image' => $image,
+	return array(
+		array(
+			'slug'           => 'record-pagination-01',
+			'title'          => 'もも、開花がそろってきた',
+			'fruit'          => 'peach',
+			'date'           => '2023-04-12 10:00:00',
+			'excerpt'        => '暖かくなり、ももの花が一斉に咲き始めました。',
+			'intro'          => '4月中旬、ももの花が見頃になりました。小さな庭でも香りが広がり、受粉の様子を観察しながら、強風の日は花びらが散らないよう支柱を補強しています。',
+			'featured_image' => 'img/top/photo-peach.webp',
 			'section_01'     => array(
 				'section_enabled' => 1,
-				'section_title'   => 'メモ',
-				'section_body'    => '<p>2ページ目以降にこのカードが表示されれば、ページネーションは正常に動作しています。</p>',
+				'section_title'   => '開花時の水やり',
+				'section_body'    => '<p>開花中は根が敏感なため、土が乾いたタイミングで少量ずつ与えています。葉面への散水は避け、花の腐敗を防いでいます。</p>',
 			),
-		);
-	}
-
-	return $records;
+		),
+		array(
+			'slug'           => 'record-pagination-02',
+			'title'          => 'すもも、風の強い日の枝さばき',
+			'fruit'          => 'plum',
+			'date'           => '2023-05-08 10:00:00',
+			'excerpt'        => '春の強風で枝が擦れたため、傷口を整理しました。',
+			'intro'          => 'すももの若枝が風で揺れ、隣の枝と擦れ合っていたため、内向きに伸びた枝を整理しました。樹の中心が開くよう、外側に向かう枝を中心に残しています。',
+			'featured_image' => 'img/top/photo-plum.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '枝の整理',
+				'section_body'    => '<p>切り口は斜めに滑らかに仕上げ、切り口保護剤を薄く塗布しました。剪定後は樹勢を落とさないよう、施肥は控えめにしています。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-03',
+			'title'          => 'ぶどう棚の新梢を誘引',
+			'fruit'          => 'grape',
+			'date'           => '2023-06-03 10:00:00',
+			'excerpt'        => '新梢が伸びてきたので、誘引紐に沿って誘導しました。',
+			'intro'          => 'ぶどうの新梢が勢いよく伸びてきました。棚の上方向に誘引し、葉と房が重ならないよう間隔を空けています。日当たりと風通しを確保するための作業です。',
+			'featured_image' => 'img/top/photo-grape.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '誘引のコツ',
+				'section_body'    => '<p>若い梢は折れやすいので、紐に沿わせるようにゆっくり誘導します。房の下に葉が密集しないよう、不要な葉は摘み取りました。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-04',
+			'title'          => 'ブルーベリー、マルチを敷き直し',
+			'fruit'          => 'blueberry',
+			'date'           => '2023-07-18 10:00:00',
+			'excerpt'        => '夏の蒸れを防ぐため、マルチチップを補充しました。',
+			'intro'          => 'ブルーベリーの株元に敷いていたマルチが薄くなっていたため、新しいチップを重ねました。雑草抑制と土壌水分の安定が目的です。',
+			'featured_image' => 'img/top/photo-blueberry.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '株元の手入れ',
+				'section_body'    => '<p>マルチは根元に密着させすぎず、幹周りに少し隙間を残しています。酸性用の液肥は、マルチの上からではなく土に直接与えました。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-05',
+			'title'          => 'さくらんぼ、実の肥大を確認',
+			'fruit'          => 'cherry',
+			'date'           => '2023-05-22 10:00:00',
+			'excerpt'        => '摘果後のさくらんぼが順調に大きくなっています。',
+			'intro'          => 'さくらんぼの摘果から2週間ほど経ち、残した粒が順調に肥大しています。房の先端粒を中心に、日当たりの良い位置に実がついているのを確認しました。',
+			'featured_image' => 'img/top/photo-cherry.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '肥大期の管理',
+				'section_body'    => '<p>この時期は急激な乾燥に弱いため、朝に土の状態を確認してから水やりしています。鳥の被害が出る前に、ネットの準備も進めています。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-06',
+			'title'          => 'プルーンの若木、芯止め剪定',
+			'fruit'          => 'prune',
+			'date'           => '2023-03-05 10:00:00',
+			'excerpt'        => '植え付け2年目のプルーンに、芯止め剪定を行いました。',
+			'intro'          => '若木のプルーンが背丈を伸ばしてきたため、芯止め剪定で低めの樹形に整えました。収穫しやすい高さを目指し、主枝を3本程度に誘導しています。',
+			'featured_image' => 'img/top/photo-prune.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '若木剪定のポイント',
+				'section_body'    => '<p>切り口は芽の上5mmほどで、外側の芽を残すようにしました。剪定後は根張りを促すため、深い施肥は避けています。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-07',
+			'title'          => 'もも、病斑葉を取り除く',
+			'fruit'          => 'peach',
+			'date'           => '2023-08-14 10:00:00',
+			'excerpt'        => '葉に斑点が見つかったため、該当葉を除去しました。',
+			'intro'          => 'ももの葉に褐色の斑点が出ていたため、早めに該当葉を摘み取りました。風通しを良くし、葉面に水が残らないよう、夕方の散水は控えています。',
+			'featured_image' => 'img/top/photo-peach.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '予防の工夫',
+				'section_body'    => '<p>取り除いた葉は庭外へ持ち出し、堆肥には入れませんでした。枝の密度が高い部分は、軽く間引きして光が当たるようにしました。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-08',
+			'title'          => 'すもも、実の自重で枝が垂れた',
+			'fruit'          => 'plum',
+			'date'           => '2023-07-25 10:00:00',
+			'excerpt'        => '実が重く枝がしなったため、支柱で受けました。',
+			'intro'          => 'すももの実が大きくなり、枝が地面に近づいてきました。折れないよう支柱を立て、房全体を支えるように紐で固定しました。',
+			'featured_image' => 'img/top/photo-plum.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '収穫前の支え',
+				'section_body'    => '<p>支柱の先端が枝に食い込まないよう、布テープで緩衝しています。収穫まであと少しなので、無理な動きを避けて観察を続けます。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-09',
+			'title'          => 'ぶどう、着色期の光と風通し',
+			'fruit'          => 'grape',
+			'date'           => '2023-08-28 10:00:00',
+			'excerpt'        => '房の周りの葉を整理し、着色を促しました。',
+			'intro'          => 'ぶどうが着色し始めたため、房の周りの葉を摘葉して光を当てました。風通しも確保し、湿気がこもらないようにしています。',
+			'featured_image' => 'img/top/photo-grape.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '着色期の管理',
+				'section_body'    => '<p>摘葉は朝の涼しい時間帯に行い、房自体には触れないよう注意しました。葉を取りすぎないよう、房の直上だけを中心に整理しています。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-10',
+			'title'          => 'ブルーベリー、鳥よけネットを設置',
+			'fruit'          => 'blueberry',
+			'date'           => '2023-06-20 10:00:00',
+			'excerpt'        => '実が色づき始めたので、ネットで囲いました。',
+			'intro'          => 'ブルーベリーの実が青紫色に変わり始め、鳥の食害が心配になったため、ネットをかけました。収穫までの短期間ですが、実を守る大事な対策です。',
+			'featured_image' => 'img/top/photo-blueberry.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => 'ネットの掛け方',
+				'section_body'    => '<p>ネットの端を地面に固定し、隙間から鳥が入らないようにしました。収穫のたびに開閉しやすいよう、クリップで留めています。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-11',
+			'title'          => 'さくらんぼ、収穫前の糖度チェック',
+			'fruit'          => 'cherry',
+			'date'           => '2023-06-12 10:00:00',
+			'excerpt'        => '試し収穫で甘さを確認し、本収穫の時期を見極めました。',
+			'intro'          => 'さくらんぼの色が濃くなってきたため、数粒だけ試し収穫して味を確認しました。酸味が抜け、甘みがしっかり出ていれば本格的な収穫に入ります。',
+			'featured_image' => 'img/top/photo-cherry.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '収穫の目安',
+				'section_body'    => '<p>ヘタが緑から黄緑に変わり、果皮にツヤが出てきた粒から順に収穫します。朝の涼しい時間帯に取ると、傷みにくくなります。</p>',
+			),
+		),
+		array(
+			'slug'           => 'record-pagination-12',
+			'title'          => 'プルーン、落ち葉を片付けて冬支度',
+			'fruit'          => 'prune',
+			'date'           => '2023-11-10 10:00:00',
+			'excerpt'        => '落葉が進んだので、株元の清掃と土の状態を確認しました。',
+			'intro'          => 'プルーンの葉が落ち、樹形がはっきり見えるようになりました。株元に落ち葉が残らないよう片付け、来年の芽吹きに備えて土の状態を確認しています。',
+			'featured_image' => 'img/top/photo-prune.webp',
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => '冬に向けて',
+				'section_body'    => '<p>落ち葉は病害の温床になりやすいため、庭外へ運びました。乾燥した日に、軽く中耕して土の通気性を高めています。</p>',
+			),
+		),
+	);
 }
 
 /**
- * @return int 新規作成件数
+ * @return int 作成・更新件数
  */
 function kaju_blog_seed_pagination_records(): int {
 	if ( ! post_type_exists( 'record' ) ) {
 		return 0;
 	}
 
-	$created = 0;
+	$count = 0;
 	foreach ( kaju_blog_pagination_record_definitions() as $def ) {
-		if ( kaju_blog_upsert_sample_record( $def, false ) ) {
-			++$created;
+		if ( kaju_blog_upsert_sample_record( $def, true ) ) {
+			++$count;
 		}
 	}
 
-	return $created;
+	return $count;
 }
 
 /**

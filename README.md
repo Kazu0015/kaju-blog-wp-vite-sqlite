@@ -184,27 +184,17 @@ DEPLOY_ENV_FILE=.env.prod
 ./deploy-rsync.sh
 ```
 
-ビルド → Docker 関連ファイルと `wordpress/` を転送します（通常は `wp-content/database/` を除外し、サーバー上の DB を保持）。  
-コンテナが起動中なら、有効テーマを `kaju-blog` に自動で揃えます。
+コードと `uploads/` を転送します（本番 DB はそのまま）。
 
-**メディア画像が本番だけ 404 のとき**（DB と `uploads/` の不一致）は、`.env` に次を設定して再デプロイします。
-
-```bash
-DEPLOY_SYNC_DATABASE=1
-./deploy-rsync.sh
-```
-
-ローカルの SQLite と `uploads/` を本番に上書きし、`http://localhost:8080` を `.env.prod` の `WP_HOME` に置換します。
-
-### 3. VPS でコンテナ起動
+ローカル DB も本番に合わせるとき:
 
 ```bash
-./ssh_connect.sh
-cd /home/kazu/docker_doc/kaju_blog
-docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+./deploy-rsync.sh --overwrite_database_sync
 ```
 
-停止する場合: `docker compose -f docker-compose.prod.yml --env-file .env.prod down`
+`deploy-rsync.sh` の最後で本番の `docker compose up -d --build` まで実行します。SSH で入る必要は通常ありません。
+
+停止する場合（VPS 上）: `docker compose -f docker-compose.prod.yml --env-file .env.prod down`
 
 > 同一ドメインで旧 `kaju_blog_vite_wp` が稼働中の場合は、先に旧コンテナを停止してから起動してください。
 

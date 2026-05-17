@@ -23,6 +23,8 @@ while ( have_posts() ) :
 		)
 	);
 	$profile_rows = kaju_blog_tree_profile_rows( $post_id );
+	$prev         = kaju_blog_get_adjacent_post( true, $post_id );
+	$next         = kaju_blog_get_adjacent_post( false, $post_id );
 	?>
 
 <main>
@@ -83,6 +85,25 @@ while ( have_posts() ) :
 					<?php the_content(); ?>
 				</div>
 			<?php endif; ?>
+
+			<nav class="single-nav" aria-label="<?php esc_attr_e( '前後の記事', 'kaju-blog' ); ?>">
+				<?php if ( $prev instanceof WP_Post ) : ?>
+					<a href="<?php echo esc_url( get_permalink( $prev ) ); ?>" class="single-nav__link">
+						<span class="single-nav__arrow">&lt;</span>
+						以前の記事へ
+					</a>
+				<?php else : ?>
+					<span class="single-nav__link" aria-hidden="true"></span>
+				<?php endif; ?>
+				<?php if ( $next instanceof WP_Post ) : ?>
+					<a href="<?php echo esc_url( get_permalink( $next ) ); ?>" class="single-nav__link">
+						新しい記事へ
+						<span class="single-nav__arrow">&gt;</span>
+					</a>
+				<?php else : ?>
+					<span class="single-nav__link" aria-hidden="true"></span>
+				<?php endif; ?>
+			</nav>
 
 			<div class="single-back">
 				<a href="<?php echo esc_url( $archive ); ?>" class="single-back__link">← 庭の木一覧に戻る</a>

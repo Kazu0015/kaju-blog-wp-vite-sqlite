@@ -38,7 +38,7 @@ while ( have_posts() ) :
 					null,
 					array(
 						'title'       => get_the_title(),
-						'contact_url' => home_url( '/contact/' ),
+						'contact_url' => kaju_blog_page_url( 'contact' ),
 						'home_url'    => home_url( '/' ),
 					)
 				);

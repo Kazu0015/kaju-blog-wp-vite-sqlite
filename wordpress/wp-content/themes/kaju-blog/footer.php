@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer__nav-link">TOP</a></li>
 				<li class="footer__nav-item"><a href="<?php echo esc_url( get_post_type_archive_link( 'tree' ) ?: home_url( '/trees/' ) ); ?>" class="footer__nav-link">庭の木</a></li>
 				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/profile/' ) ); ?>" class="footer__nav-link">プロフィール</a></li>
-				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>" class="footer__nav-link">プライバシーポリシー</a></li>
+				<li class="footer__nav-item"><a href="<?php echo esc_url( kaju_blog_privacy_policy_url() ); ?>" class="footer__nav-link">プライバシーポリシー</a></li>
 			</ul>
 		</nav>
 		<p class="footer__copyright">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> 小さな庭の果樹栽培<wbr>ブログ</p>

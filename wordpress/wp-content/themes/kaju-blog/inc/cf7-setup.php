@@ -32,7 +32,7 @@ function kaju_blog_maybe_install_cf7_form(): void {
  * テーマ用 CF7 フォームを保存（ID は kaju_blog_cf7_form_id に記録）
  */
 function kaju_blog_install_cf7_contact_form(): void {
-	$form_body = kaju_blog_cf7_default_form_markup( home_url( '/privacy-policy/' ) );
+	$form_body = kaju_blog_cf7_default_form_markup( kaju_blog_privacy_policy_url() );
 	$mail      = kaju_blog_cf7_default_mail();
 	$messages  = kaju_blog_cf7_default_messages();
 

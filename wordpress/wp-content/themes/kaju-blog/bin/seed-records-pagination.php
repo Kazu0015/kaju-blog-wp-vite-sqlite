@@ -16,7 +16,9 @@ require $wp_load;
 
 require_once get_template_directory() . '/inc/seed-records.php';
 
-$created = kaju_blog_seed_pagination_records();
-$total   = (int) wp_count_posts( 'record' )->publish;
+delete_option( 'kaju_blog_seed_pagination_records_version' );
+$upserted = kaju_blog_seed_pagination_records();
+update_option( 'kaju_blog_seed_pagination_records_version', KAJU_BLOG_SEED_PAGINATION_RECORDS_VERSION, false );
+$total    = (int) wp_count_posts( 'record' )->publish;
 
-echo sprintf( "Created %d pagination record(s). Total published: %d\n", $created, $total );
+echo sprintf( "Upserted %d pagination record(s). Total published: %d\n", $upserted, $total );

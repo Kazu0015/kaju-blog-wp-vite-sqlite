@@ -2,27 +2,34 @@
 
 # 本番サーバーへ rsync で差分転送する（SSH での compose 起動は行わない）
 #
-# 使用方法: プロジェクトルートの .env に DEPLOY_TARGET / DEPLOY_SSH_KEY を設定し、引数なしで実行
+# 使用方法:
 #   ./deploy-rsync.sh
+#   ./deploy-rsync.sh --overwrite_database_sync
 #
-# .env に記載する変数:
-#   DEPLOY_TARGET   … rsync 先（例: user@host:/home/kazu/docker_doc/kaju_blog）
-#   DEPLOY_SSH_KEY  … 秘密鍵のパス
-#   SKIP_BUILD=1           … frontend の npm run build をスキップ
-#   SKIP_THEME_ACTIVATE=1  … 転送後の有効テーマ確認・切替をスキップ
-#   DEPLOY_ENV_FILE        … リモートへ .env.prod として送るローカルファイルのパス（任意）
-#   DEPLOY_WP_CONTAINER    … WordPress コンテナ名（既定: kaju_blog_wordpress_prod）
-#   DEPLOY_SYNC_DATABASE=1 … ローカルの SQLite + uploads を本番 DB に上書き（初回・復旧用）
-#   DEPLOY_URL_FROM        … DB 置換の置換元（既定: http://localhost:8080）
-#   DEPLOY_URL_TO          … DB 置換の置換先（未設定時は .env.prod の WP_HOME）
+# .env（初回のみ）: DEPLOY_TARGET / DEPLOY_SSH_KEY
+# 環境変数（任意）: SKIP_BUILD=1 / SKIP_THEME_ACTIVATE=1 / DEPLOY_ENV_FILE など
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_ROOT"
 
-if [ $# -gt 0 ]; then
-	echo "エラー: コマンドライン引数は使用できません。.env の DEPLOY_TARGET のみで転送先を指定してください。"
-	exit 1
-fi
+SYNC_DATABASE=0
+for arg in "$@"; do
+	case "$arg" in
+		--overwrite_database_sync)
+			SYNC_DATABASE=1
+			;;
+		-h | --help)
+			echo "使い方: $0 [--overwrite_database_sync]"
+			echo "  --overwrite_database_sync  ローカル SQLite を本番に上書き（uploads 含む）し URL を置換"
+			exit 0
+			;;
+		*)
+			echo "エラー: 不明なオプション: $arg"
+			echo "使い方: $0 [--overwrite_database_sync]"
+			exit 1
+			;;
+	esac
+done
 
 if [ ! -f .env ]; then
 	echo "エラー: プロジェクトルートに .env がありません。cp .env.sample .env して設定してください。"
@@ -59,7 +66,14 @@ fi
 
 if [ "${SKIP_BUILD:-0}" != "1" ]; then
 	echo "==> frontend: npm run build"
-	(cd frontend && npm run build)
+	if [ ! -x frontend/node_modules/.bin/vite ]; then
+		echo "    （node_modules 未構築のため npm ci を実行）"
+		(cd frontend && npm ci)
+	fi
+	if ! (cd frontend && npm run build); then
+		echo "エラー: npm run build に失敗しました。本番へ古い CSS を送らないため中止します。"
+		exit 1
+	fi
 else
 	echo "==> SKIP_BUILD=1 のためビルドをスキップします"
 fi
@@ -70,6 +84,26 @@ if [ ! -f "$MANIFEST" ]; then
 	echo "      frontend で npm run build を実行するか、SKIP_BUILD=1 を外してください。"
 	exit 1
 fi
+
+# manifest が指す CSS が実在すること（PHP だけ更新され CSS が古い状態を防ぐ）
+MANIFEST_CSS_REL="$(MANIFEST="$MANIFEST" node -e '
+const fs = require("fs");
+const m = JSON.parse(fs.readFileSync(process.env.MANIFEST, "utf8"));
+const entry = m["src/js/main.js"];
+if (!entry?.css?.[0]) process.exit(2);
+process.stdout.write(entry.css[0]);
+' 2>/dev/null || true)"
+if [ -z "$MANIFEST_CSS_REL" ]; then
+	echo "エラー: manifest に CSS エントリがありません ($MANIFEST)"
+	exit 1
+fi
+MANIFEST_CSS_PATH="wordpress/wp-content/themes/kaju-blog/assets/${MANIFEST_CSS_REL}"
+if [ ! -f "$MANIFEST_CSS_PATH" ]; then
+	echo "エラー: manifest の CSS がディスク上にありません ($MANIFEST_CSS_PATH)"
+	echo "      npm run build が正常完了しているか確認してください。"
+	exit 1
+fi
+echo "==> ビルド CSS: ${MANIFEST_CSS_REL}"
 
 echo "=========================================="
 echo "rsync 転送情報"
@@ -82,26 +116,21 @@ echo ""
 SSH_HOST="${DEPLOY_TARGET%%:*}"
 REMOTE_DIR="${DEPLOY_TARGET#*:}"
 
-SYNC_DATABASE=0
-if [ "${DEPLOY_SYNC_DATABASE:-0}" = "1" ]; then
-	SYNC_DATABASE=1
-	LOCAL_DB="wordpress/wp-content/database/.ht.sqlite"
+LOCAL_DB="wordpress/wp-content/database/.ht.sqlite"
+if [ "$SYNC_DATABASE" = "1" ]; then
 	if [ ! -f "$LOCAL_DB" ]; then
 		echo "エラー: ローカル DB が見つかりません ($LOCAL_DB)"
 		exit 1
 	fi
-	echo "=========================================="
-	echo "警告: DEPLOY_SYNC_DATABASE=1"
-	echo "本番の SQLite をローカルで上書きします。"
-	echo "=========================================="
+	echo "==> 本番 DB をローカルで上書きします（SQLite + uploads）"
 fi
 
-WP_HOME_PROD="${DEPLOY_URL_TO:-}"
-if [ -z "$WP_HOME_PROD" ] && [ -f .env.prod ]; then
+WP_HOME_PROD=""
+if [ -f .env.prod ]; then
 	# shellcheck disable=SC1091
 	WP_HOME_PROD="$(grep -E '^WP_HOME=' .env.prod | head -1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
 fi
-URL_FROM="${DEPLOY_URL_FROM:-http://localhost:8080}"
+URL_FROM="http://localhost:8080"
 
 if [ "$SYNC_DATABASE" = "1" ]; then
 	echo "==> 本番 WordPress コンテナを一時停止（DB 整合性のため）..."
@@ -120,7 +149,7 @@ echo "==> wordpress/ を差分転送中（--delete で不要ファイルを削�
 RSYNC_EXCLUDE=( )
 if [ "$SYNC_DATABASE" != "1" ]; then
 	RSYNC_EXCLUDE=( --exclude='wp-content/database/' )
-	echo "    （database/ は除外。DB も同期する場合は .env に DEPLOY_SYNC_DATABASE=1）"
+	echo "    （database/ は除外。DB も送る場合は --overwrite_database_sync）"
 else
 	echo "    （database/ を含めて同期）"
 fi
@@ -143,11 +172,9 @@ fi
 echo "==> wordpress/ の所有者を www-data に修正..."
 ssh -i "$KEY_PATH" "$SSH_HOST" "chown -R www-data:www-data ${REMOTE_DIR}/wordpress"
 
-if [ "$SYNC_DATABASE" = "1" ]; then
-	echo "==> 本番コンテナを起動..."
-	ssh -i "$KEY_PATH" "$SSH_HOST" "cd ${REMOTE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env.prod up -d wordpress"
-	sleep 3
-fi
+echo "==> 本番コンテナを起動・更新（docker compose up -d --build）..."
+ssh -i "$KEY_PATH" "$SSH_HOST" "cd ${REMOTE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build"
+sleep 5
 
 WP_CONTAINER="${DEPLOY_WP_CONTAINER:-kaju_blog_wordpress_prod}"
 
@@ -192,6 +219,4 @@ echo "activated {$theme}\n";
 REMOTE_THEME
 fi
 
-echo "完了。続きは ssh_connect.sh 等で SSH 接続し、デプロイ先で以下を実行してください。"
-echo "  cd ${REMOTE_DIR}"
-echo "  docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build"
+echo "完了。"
