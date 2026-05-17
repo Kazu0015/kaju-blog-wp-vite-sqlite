@@ -1,0 +1,75 @@
+@use "../../global" as g;
+
+/*!
+page > tree > single
+------------------------------
+*/
+.tree-profile {
+  margin-bottom: 40px;
+  padding: 24px 20px;
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(61, 43, 31, 0.07);
+
+  @include g.mq(md) {
+    margin-bottom: 48px;
+    padding: 32px 40px;
+  }
+}
+
+.tree-profile__row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  @include g.mq(md) {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: start;
+    gap: 12px 32px;
+    padding: 20px 0;
+  }
+}
+
+.tree-profile__term {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: var(--color-main);
+
+  @include g.mq(md) {
+    font-size: 18px;
+    padding-top: 2px;
+  }
+}
+
+.tree-profile__desc {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.9;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  white-space: pre-line;
+
+  @include g.mq(md) {
+    font-size: 18px;
+  }
+}
+
+.tree-single__content {
+  @include g.entry-prose;
+}

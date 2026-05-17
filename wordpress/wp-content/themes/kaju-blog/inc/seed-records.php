@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /** サンプル定義を変えたらバージョンを上げる */
-const KAJU_BLOG_SEED_RECORDS_VERSION = '2.0.0';
+const KAJU_BLOG_SEED_RECORDS_VERSION = '2.1.0';
 
 add_action( 'init', 'kaju_blog_maybe_seed_sample_records', 30 );
 
@@ -264,6 +264,25 @@ function kaju_blog_sample_record_definitions(): array {
 				'section_image_style' => 'circle',
 				'section_point_title' => '🌱ポイント',
 				'section_point_text'  => '摘果は晴れた日の午前中が作業しやすいです。',
+			),
+		),
+		array(
+			'slug'           => 'prune-winter-pruning',
+			'title'          => 'プルーンの冬剪定',
+			'fruit'          => 'prune',
+			'date'           => '2024-02-12 10:00:00',
+			'excerpt'        => '落葉後のプルーンに冬剪定を行い、来年の着果と風通しを整えました。',
+			'intro'          => 'プルーンは落葉して樹形が見えやすい冬が剪定の好適期です。伸びすぎた枝を整理し、実をつけやすい枝を残しました。',
+			'featured_image' => 'img/top/photo-prune.webp',
+			'section_01'     => array(
+				'section_enabled'     => 1,
+				'section_title'       => '剪定のポイント',
+				'section_body'        => '<p>内向きに交差する枝や、弱い枝を取り除き、外側に向かって伸びる健枝を中心に残します。</p>',
+				'section_list'        => "伸びすぎた枝を短截\n内向き・交差枝を除去\n樹の中心が開くように調整",
+				'section_image'       => 'img/top/photo-prune.webp',
+				'section_image_style' => 'default',
+				'section_point_title' => '🌱ポイント',
+				'section_point_text'  => '剪定後は切り口を乾燥させ、病害に注意しましょう。',
 			),
 		),
 	);

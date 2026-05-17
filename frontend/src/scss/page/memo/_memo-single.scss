@@ -1,0 +1,15 @@
+@use "../../global" as g;
+
+/*!
+page > memo > single
+------------------------------
+*/
+.memo-single__content {
+  margin-bottom: 48px;
+
+  @include g.mq(md) {
+    margin-bottom: 64px;
+  }
+
+  @include g.entry-prose;
+}

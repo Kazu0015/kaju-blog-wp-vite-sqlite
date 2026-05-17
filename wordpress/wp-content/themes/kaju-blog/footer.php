@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 		<nav class="footer__nav" aria-label="<?php esc_attr_e( 'フッターナビゲーション', 'kaju-blog' ); ?>">
 			<ul class="footer__nav-list">
 				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer__nav-link">TOP</a></li>
-				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/category/' ) ); ?>" class="footer__nav-link">カテゴリ</a></li>
+				<li class="footer__nav-item"><a href="<?php echo esc_url( get_post_type_archive_link( 'tree' ) ?: home_url( '/trees/' ) ); ?>" class="footer__nav-link">庭の木</a></li>
 				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/profile/' ) ); ?>" class="footer__nav-link">プロフィール</a></li>
 				<li class="footer__nav-item"><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>" class="footer__nav-link">プライバシーポリシー</a></li>
 			</ul>

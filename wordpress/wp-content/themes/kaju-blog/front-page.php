@@ -41,7 +41,7 @@ $variety_items = array(
 			<div class="top-kv__image-wrapper">
 				<ul class="top-kv__image-list">
 					<?php foreach ( $kv_images as $i => $img ) : ?>
-						<li class="top-kv__image-item<?php echo 0 === $i ? ' top-kv__image-item--active' : ''; ?>">
+						<li class="top-kv__image-item<?php echo 0 === $i ? ' is-active' : ''; ?>">
 							<img class="top-kv__image" src="<?php echo esc_url( kaju_blog_asset_uri( $img['src'] ) ); ?>" alt="<?php echo esc_attr( $img['alt'] ); ?>" width="8256" height="2048"<?php echo 0 === $i ? ' fetchpriority="high"' : ''; ?> decoding="async">
 						</li>
 					<?php endforeach; ?>

@@ -1,8 +1,6 @@
 <?php
 /**
- * 庭の木 詳細（スケルトン）
- *
- * 今後 ACF プロフィール（植えた年・台木・受粉樹・開花期・収穫期など）の表示を実装する。
+ * 庭の木 詳細
  *
  * @package kaju-blog
  */
@@ -11,7 +9,20 @@ get_header();
 
 while ( have_posts() ) :
 	the_post();
-	$archive = get_post_type_archive_link( 'tree' ) ?: home_url( '/trees/' );
+	$post_id      = get_the_ID();
+	$has_thumb    = kaju_blog_post_has_thumbnail( $post_id );
+	$thumb        = kaju_blog_post_thumbnail_url( $post_id, 'large' );
+	$thumb_class  = 'single-featured__image' . ( $has_thumb ? '' : ' single-featured__image--no-image' );
+	$archive      = get_post_type_archive_link( 'tree' ) ?: home_url( '/trees/' );
+	$modifier     = kaju_blog_record_fruit_modifier( $post_id );
+	$label        = kaju_blog_record_fruit_label( $post_id );
+	$meta_parts   = array_filter(
+		array(
+			kaju_blog_tree_planted_year_label( $post_id ),
+			kaju_blog_tree_age_label( $post_id ),
+		)
+	);
+	$profile_rows = kaju_blog_tree_profile_rows( $post_id );
 	?>
 
 <main>
@@ -39,12 +50,39 @@ while ( have_posts() ) :
 
 		<article>
 			<header class="single-header">
+				<?php if ( ( $modifier && $label ) || ! empty( $meta_parts ) ) : ?>
+					<div class="single-header__meta">
+						<?php if ( $modifier && $label ) : ?>
+							<span class="c-log-card__meta-badge c-log-card__meta-badge--<?php echo esc_attr( $modifier ); ?>"><?php echo esc_html( $label ); ?></span>
+						<?php endif; ?>
+						<?php if ( ! empty( $meta_parts ) ) : ?>
+							<p class="single-header__date"><?php echo esc_html( implode( ' / ', $meta_parts ) ); ?></p>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 				<h1 class="single-header__title"><?php the_title(); ?></h1>
 			</header>
 
-			<div class="single-intro">
-				<?php the_content(); ?>
+			<div class="single-featured">
+				<img class="<?php echo esc_attr( $thumb_class ); ?>" src="<?php echo esc_url( $thumb ); ?>" alt="<?php echo esc_attr( $has_thumb ? get_the_title() : '' ); ?>" width="800" height="450" loading="lazy" decoding="async"<?php echo $has_thumb ? '' : ' role="presentation"'; ?>>
 			</div>
+
+			<?php if ( $profile_rows ) : ?>
+				<div class="tree-profile">
+					<?php foreach ( $profile_rows as $row ) : ?>
+						<div class="tree-profile__row">
+							<p class="tree-profile__term"><?php echo esc_html( $row['label'] ); ?></p>
+							<p class="tree-profile__desc"><?php echo esc_html( $row['value'] ); ?></p>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( get_the_content() ) : ?>
+				<div class="single-intro tree-single__content">
+					<?php the_content(); ?>
+				</div>
+			<?php endif; ?>
 
 			<div class="single-back">
 				<a href="<?php echo esc_url( $archive ); ?>" class="single-back__link">← 庭の木一覧に戻る</a>

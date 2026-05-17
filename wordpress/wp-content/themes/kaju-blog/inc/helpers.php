@@ -117,17 +117,64 @@ function kaju_blog_current_nav_slug(): string {
 }
 
 /**
+ * 栽培記録一覧 URL
+ */
+function kaju_blog_record_archive_url(): string {
+	$link = get_post_type_archive_link( 'record' );
+	return $link ? (string) $link : home_url( '/records/' );
+}
+
+/**
+ * 栽培記録一覧の果樹絞り込み URL（/records/?record_fruit=slug）
+ *
+ * @param string|null $fruit_slug 省略時はすべて表示
+ */
+function kaju_blog_record_filter_url( ?string $fruit_slug = null ): string {
+	$base = kaju_blog_record_archive_url();
+	if ( null === $fruit_slug || '' === $fruit_slug ) {
+		return $base;
+	}
+
+	return add_query_arg( 'record_fruit', sanitize_title( $fruit_slug ), $base );
+}
+
+/**
+ * 現在の果樹絞り込み slug（未選択は空文字）
+ */
+function kaju_blog_get_record_fruit_filter_slug(): string {
+	$slug = get_query_var( 'record_fruit' );
+	if ( is_string( $slug ) && '' !== $slug ) {
+		return sanitize_title( $slug );
+	}
+
+	if ( is_tax( 'fruit' ) ) {
+		$term = get_queried_object();
+		if ( $term instanceof WP_Term ) {
+			return $term->slug;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * 果樹絞り込みの表示ラベル
+ */
+function kaju_blog_get_record_fruit_filter_label(): string {
+	$slug = kaju_blog_get_record_fruit_filter_slug();
+	if ( '' === $slug ) {
+		return '';
+	}
+
+	$map = kaju_blog_fruit_map();
+	return $map[ $slug ]['label'] ?? $slug;
+}
+
+/**
  * 果樹タクソノミーアーカイブ URL（栽培記録の絞り込み）
  */
 function kaju_blog_fruit_archive_url( string $slug ): string {
-	$term = get_term_by( 'slug', $slug, 'fruit' );
-	if ( $term instanceof WP_Term ) {
-		$link = get_term_link( $term );
-		if ( ! is_wp_error( $link ) ) {
-			return (string) $link;
-		}
-	}
-	return home_url( '/records/fruit/' . rawurlencode( $slug ) . '/' );
+	return kaju_blog_record_filter_url( $slug );
 }
 
 /**
@@ -208,6 +255,39 @@ function kaju_blog_tree_planted_year_label( int $post_id ): string {
 }
 
 /**
+ * 庭の木: プロフィール表示行（ACF、値がある項目のみ）
+ *
+ * @return list<array{label: string, value: string}>
+ */
+function kaju_blog_tree_profile_rows( int $post_id ): array {
+	if ( ! function_exists( 'get_field' ) ) {
+		return array();
+	}
+
+	$fields = array(
+		'rootstock'      => '台木',
+		'pollinator'     => '受粉樹',
+		'bloom_season'   => '開花期',
+		'harvest_season' => '収穫期',
+		'status_note'    => '現在の状態',
+	);
+
+	$rows = array();
+	foreach ( $fields as $key => $label ) {
+		$value = trim( (string) get_field( $key, $post_id ) );
+		if ( '' === $value ) {
+			continue;
+		}
+		$rows[] = array(
+			'label' => $label,
+			'value' => $value,
+		);
+	}
+
+	return $rows;
+}
+
+/**
  * 日付表示（静的 HTML の YYYY.MM.DD）
  */
 function kaju_blog_format_date( int $post_id ): string {
@@ -255,6 +335,38 @@ function kaju_blog_lines_from_textarea( ?string $text ): array {
 			static fn( $line ) => '' !== $line
 		)
 	);
+}
+
+/**
+ * 同一投稿タイプの前後投稿を取得（get_*_post の第3引数は taxonomy のため post type を渡さない）
+ *
+ * @param bool        $previous  true=前の投稿, false=次の投稿.
+ * @param int|null    $post_id   対象投稿 ID（省略時はループ中の投稿）.
+ * @param string|null $taxonomy  同一タームに限定する taxonomy（例: fruit）.
+ * @return WP_Post|null
+ */
+function kaju_blog_get_adjacent_post( bool $previous, ?int $post_id = null, ?string $taxonomy = null ): ?WP_Post {
+	$post = get_post( $post_id );
+	if ( ! $post ) {
+		return null;
+	}
+
+	$in_same_term = null !== $taxonomy && '' !== $taxonomy;
+	$tax          = $in_same_term ? $taxonomy : 'category';
+
+	$adjacent = $previous
+		? get_previous_post( $in_same_term, '', $tax, $post )
+		: get_next_post( $in_same_term, '', $tax, $post );
+
+	if ( $adjacent instanceof WP_Post && $adjacent->post_type === $post->post_type ) {
+		return $adjacent;
+	}
+
+	if ( $in_same_term ) {
+		return kaju_blog_get_adjacent_post( $previous, $post_id, null );
+	}
+
+	return null;
 }
 
 /**

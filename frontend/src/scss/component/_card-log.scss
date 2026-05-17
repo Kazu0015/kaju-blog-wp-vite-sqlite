@@ -100,6 +100,11 @@ component > card-log
   }
 }
 
+.c-log-card__meta-badge--all {
+  background-color: var(--color-base-dark);
+  color: var(--color-main);
+}
+
 .c-log-card__meta-badge--peach {
   background-color: var(--color-peach);
 }

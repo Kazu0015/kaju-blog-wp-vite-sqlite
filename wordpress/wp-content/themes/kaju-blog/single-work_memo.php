@@ -14,8 +14,8 @@ while ( have_posts() ) :
 	$thumb     = kaju_blog_post_thumbnail_url( $post_id, 'large' );
 	$thumb_class = 'single-featured__image' . ( $has_thumb ? '' : ' single-featured__image--no-image' );
 	$archive   = kaju_blog_memo_archive_url();
-	$prev      = get_previous_post( false, '', 'work_memo' );
-	$next      = get_next_post( false, '', 'work_memo' );
+	$prev      = kaju_blog_get_adjacent_post( true, $post_id );
+	$next      = kaju_blog_get_adjacent_post( false, $post_id );
 	?>
 
 <main>

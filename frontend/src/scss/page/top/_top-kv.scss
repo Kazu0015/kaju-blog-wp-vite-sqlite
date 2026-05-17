@@ -187,6 +187,7 @@ $top-kv-lead-radius-sp: 24px;
     align-items: center;
     width: max-content;
     opacity: 0;
+    visibility: hidden;
     transition: opacity $top-kv-crossfade ease;
     pointer-events: none;
     position: absolute;
@@ -200,6 +201,7 @@ $top-kv-lead-radius-sp: 24px;
       top: auto;
       transform: none;
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
       z-index: 1;
     }

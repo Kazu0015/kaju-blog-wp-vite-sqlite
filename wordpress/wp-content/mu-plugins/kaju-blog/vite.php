@@ -41,55 +41,129 @@ function kaju_blog_vite_manifest_path(): string {
 	return get_theme_file_path( 'assets/.vite/manifest.json' );
 }
 
-function kaju_blog_vite_use_dev_server(): bool {
-	$strategy = kaju_blog_vite_strategy();
-	if ( 'prod' === $strategy ) {
-		return false;
-	}
-	if ( 'dev' === $strategy ) {
-		return defined( 'KAJU_BLOG_VITE_ORIGIN' ) && KAJU_BLOG_VITE_ORIGIN;
-	}
-	// auto: ビルド済み manifest があれば CSS/JS はテーマ assets から（Vite 未起動でも表示される）
-	if ( is_readable( kaju_blog_vite_manifest_path() ) ) {
-		if ( defined( 'KAJU_BLOG_VITE_FORCE_DEV' ) && KAJU_BLOG_VITE_FORCE_DEV ) {
-			return defined( 'KAJU_BLOG_VITE_ORIGIN' ) && KAJU_BLOG_VITE_ORIGIN;
-		}
-		return false;
-	}
-	return defined( 'KAJU_BLOG_VITE_ORIGIN' ) && KAJU_BLOG_VITE_ORIGIN;
+/**
+ * Vite base（vite.config.js の base と一致させる）
+ */
+function kaju_blog_vite_base_path(): string {
+	$base = defined( 'KAJU_BLOG_VITE_BASE' ) && KAJU_BLOG_VITE_BASE
+		? (string) KAJU_BLOG_VITE_BASE
+		: '/wp-content/themes/kaju-blog/assets/';
+
+	return '/' . trim( $base, '/' ) . '/';
 }
 
 /**
- * フロント用アセット（dev: echo / prod: manifest + filemtime）
+ * Vite 死活確認用 URL（コンテナ内は KAJU_BLOG_VITE_INTERNAL_ORIGIN を推奨）
  */
-function kaju_blog_enqueue_assets(): void {
-	if ( kaju_blog_vite_use_dev_server() ) {
-		$origin = rtrim( (string) KAJU_BLOG_VITE_ORIGIN, '/' );
-		$entry  = ltrim( kaju_blog_vite_entry_key(), '/' );
-		echo '<script type="module" src="' . esc_url( $origin . '/@vite/client' ) . '"></script>' . "\n";
-		echo '<script type="module" src="' . esc_url( $origin . '/' . $entry ) . '"></script>' . "\n";
-		return;
+function kaju_blog_vite_dev_ping_url(): string {
+	$origin = defined( 'KAJU_BLOG_VITE_INTERNAL_ORIGIN' ) && KAJU_BLOG_VITE_INTERNAL_ORIGIN
+		? (string) KAJU_BLOG_VITE_INTERNAL_ORIGIN
+		: ( defined( 'KAJU_BLOG_VITE_ORIGIN' ) ? (string) KAJU_BLOG_VITE_ORIGIN : '' );
+
+	if ( '' === $origin ) {
+		return '';
 	}
 
+	return rtrim( $origin, '/' ) . kaju_blog_vite_base_path() . '@vite/client';
+}
+
+/**
+ * Vite dev サーバが応答しているか（短時間キャッシュ）
+ */
+function kaju_blog_vite_dev_server_is_running(): bool {
+	static $runtime_cache = null;
+
+	if ( null !== $runtime_cache ) {
+		return $runtime_cache;
+	}
+
+	$ping_url = kaju_blog_vite_dev_ping_url();
+	if ( '' === $ping_url ) {
+		$runtime_cache = false;
+		return false;
+	}
+
+	$transient_key = 'kaju_blog_vite_dev_up_' . md5( $ping_url );
+	$cached        = get_transient( $transient_key );
+	if ( false !== $cached ) {
+		$runtime_cache = (bool) $cached;
+		return $runtime_cache;
+	}
+
+	$response = wp_remote_get(
+		$ping_url,
+		array(
+			'timeout'   => 1,
+			'sslverify' => false,
+		)
+	);
+
+	$code  = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
+	$is_up = $code >= 200 && $code < 500;
+	set_transient( $transient_key, $is_up ? 1 : 0, 30 );
+	$runtime_cache = $is_up;
+
+	return $runtime_cache;
+}
+
+/**
+ * ブラウザ向け Vite オリジン（スクリプト読み込み用）
+ */
+function kaju_blog_vite_public_origin(): string {
+	return defined( 'KAJU_BLOG_VITE_ORIGIN' ) && KAJU_BLOG_VITE_ORIGIN
+		? rtrim( (string) KAJU_BLOG_VITE_ORIGIN, '/' )
+		: '';
+}
+
+/**
+ * Vite dev を使うか（未起動時は false → manifest にフォールバック）
+ */
+function kaju_blog_vite_use_dev_server(): bool {
+	$strategy = kaju_blog_vite_strategy();
+
+	if ( 'prod' === $strategy ) {
+		return false;
+	}
+
+	if ( ! kaju_blog_vite_dev_server_is_running() ) {
+		return false;
+	}
+
+	if ( 'dev' === $strategy ) {
+		return '' !== kaju_blog_vite_public_origin();
+	}
+
+	if ( defined( 'KAJU_BLOG_VITE_FORCE_DEV' ) && KAJU_BLOG_VITE_FORCE_DEV ) {
+		return '' !== kaju_blog_vite_public_origin();
+	}
+
+	// auto: Vite が動いていれば HMR、止まっていれば manifest
+	return '' !== kaju_blog_vite_public_origin();
+}
+
+/**
+ * manifest から CSS/JS を wp_enqueue
+ */
+function kaju_blog_enqueue_manifest_assets(): bool {
 	$manifest_path = kaju_blog_vite_manifest_path();
 	if ( ! is_readable( $manifest_path ) ) {
-		return;
+		return false;
 	}
 
 	$raw = file_get_contents( $manifest_path );
 	if ( false === $raw ) {
-		return;
+		return false;
 	}
 
 	$manifest = json_decode( $raw, true );
 	if ( ! is_array( $manifest ) ) {
-		return;
+		return false;
 	}
 
 	$key   = kaju_blog_vite_entry_key();
 	$entry = $manifest[ $key ] ?? null;
 	if ( ! is_array( $entry ) || empty( $entry['file'] ) ) {
-		return;
+		return false;
 	}
 
 	$js_rel = kaju_blog_manifest_theme_rel( (string) $entry['file'] );
@@ -121,6 +195,24 @@ function kaju_blog_enqueue_assets(): void {
 			);
 		}
 	}
+
+	return true;
+}
+
+/**
+ * フロント用アセット（dev: Vite モジュール / それ以外: manifest）
+ */
+function kaju_blog_enqueue_assets(): void {
+	if ( kaju_blog_vite_use_dev_server() ) {
+		$origin = kaju_blog_vite_public_origin();
+		$base   = kaju_blog_vite_base_path();
+		$entry  = ltrim( kaju_blog_vite_entry_key(), '/' );
+		echo '<script type="module" src="' . esc_url( $origin . $base . '@vite/client' ) . '"></script>' . "\n";
+		echo '<script type="module" src="' . esc_url( $origin . $base . $entry ) . '"></script>' . "\n";
+		return;
+	}
+
+	kaju_blog_enqueue_manifest_assets();
 }
 
 add_action( 'wp_enqueue_scripts', 'kaju_blog_enqueue_assets', 5 );

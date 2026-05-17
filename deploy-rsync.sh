@@ -12,6 +12,9 @@
 #   SKIP_THEME_ACTIVATE=1  … 転送後の有効テーマ確認・切替をスキップ
 #   DEPLOY_ENV_FILE        … リモートへ .env.prod として送るローカルファイルのパス（任意）
 #   DEPLOY_WP_CONTAINER    … WordPress コンテナ名（既定: kaju_blog_wordpress_prod）
+#   DEPLOY_SYNC_DATABASE=1 … ローカルの SQLite + uploads を本番 DB に上書き（初回・復旧用）
+#   DEPLOY_URL_FROM        … DB 置換の置換元（既定: http://localhost:8080）
+#   DEPLOY_URL_TO          … DB 置換の置換先（未設定時は .env.prod の WP_HOME）
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_ROOT"
@@ -79,6 +82,32 @@ echo ""
 SSH_HOST="${DEPLOY_TARGET%%:*}"
 REMOTE_DIR="${DEPLOY_TARGET#*:}"
 
+SYNC_DATABASE=0
+if [ "${DEPLOY_SYNC_DATABASE:-0}" = "1" ]; then
+	SYNC_DATABASE=1
+	LOCAL_DB="wordpress/wp-content/database/.ht.sqlite"
+	if [ ! -f "$LOCAL_DB" ]; then
+		echo "エラー: ローカル DB が見つかりません ($LOCAL_DB)"
+		exit 1
+	fi
+	echo "=========================================="
+	echo "警告: DEPLOY_SYNC_DATABASE=1"
+	echo "本番の SQLite をローカルで上書きします。"
+	echo "=========================================="
+fi
+
+WP_HOME_PROD="${DEPLOY_URL_TO:-}"
+if [ -z "$WP_HOME_PROD" ] && [ -f .env.prod ]; then
+	# shellcheck disable=SC1091
+	WP_HOME_PROD="$(grep -E '^WP_HOME=' .env.prod | head -1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+fi
+URL_FROM="${DEPLOY_URL_FROM:-http://localhost:8080}"
+
+if [ "$SYNC_DATABASE" = "1" ]; then
+	echo "==> 本番 WordPress コンテナを一時停止（DB 整合性のため）..."
+	ssh -i "$KEY_PATH" "$SSH_HOST" "cd ${REMOTE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env.prod stop wordpress 2>/dev/null || true"
+fi
+
 echo "==> ルートファイルを転送中（サーバー側の .env.prod 等は削除しない）..."
 rsync -avz \
 	-e "ssh -i $KEY_PATH" \
@@ -88,8 +117,16 @@ rsync -avz \
 	"${DEPLOY_TARGET}/"
 
 echo "==> wordpress/ を差分転送中（--delete で不要ファイルを削除）..."
+RSYNC_EXCLUDE=( )
+if [ "$SYNC_DATABASE" != "1" ]; then
+	RSYNC_EXCLUDE=( --exclude='wp-content/database/' )
+	echo "    （database/ は除外。DB も同期する場合は .env に DEPLOY_SYNC_DATABASE=1）"
+else
+	echo "    （database/ を含めて同期）"
+fi
+# shellcheck disable=SC2068
 rsync -avz --delete --no-owner --no-group \
-	--exclude='wp-content/database/' \
+	"${RSYNC_EXCLUDE[@]}" \
 	-e "ssh -i $KEY_PATH" \
 	wordpress/ \
 	"${DEPLOY_TARGET}/wordpress/"
@@ -106,7 +143,26 @@ fi
 echo "==> wordpress/ の所有者を www-data に修正..."
 ssh -i "$KEY_PATH" "$SSH_HOST" "chown -R www-data:www-data ${REMOTE_DIR}/wordpress"
 
+if [ "$SYNC_DATABASE" = "1" ]; then
+	echo "==> 本番コンテナを起動..."
+	ssh -i "$KEY_PATH" "$SSH_HOST" "cd ${REMOTE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env.prod up -d wordpress"
+	sleep 3
+fi
+
 WP_CONTAINER="${DEPLOY_WP_CONTAINER:-kaju_blog_wordpress_prod}"
+
+if [ "$SYNC_DATABASE" = "1" ] && [ -n "$WP_HOME_PROD" ]; then
+	echo "==> DB 内 URL を置換: ${URL_FROM} => ${WP_HOME_PROD}"
+	ssh -i "$KEY_PATH" "$SSH_HOST" bash -s -- "$WP_CONTAINER" "$URL_FROM" "$WP_HOME_PROD" <<'REMOTE_URL'
+set -euo pipefail
+CONTAINER="$1"
+FROM="$2"
+TO="$3"
+docker exec -e FROM="$FROM" -e TO="$TO" "$CONTAINER" php /var/www/html/wp-content/themes/kaju-blog/bin/replace-site-url.php
+REMOTE_URL
+elif [ "$SYNC_DATABASE" = "1" ]; then
+	echo "警告: WP_HOME が未設定のため URL 置換をスキップしました（.env.prod の WP_HOME を確認）"
+fi
 WP_THEME_SLUG="${DEPLOY_WP_THEME:-kaju-blog}"
 
 if [ "${SKIP_THEME_ACTIVATE:-0}" != "1" ]; then

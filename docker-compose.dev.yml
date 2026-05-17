@@ -3,10 +3,17 @@ services:
     build: .
     platform: linux/amd64
     restart: always
+    depends_on:
+      - vite
     ports:
       - "8080:80"
     volumes:
       - ./wordpress:/var/www/html
+    environment:
+      # ブラウザは localhost:5173、WP コンテナ内の死活確認は vite サービス名
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'KAJU_BLOG_VITE_STRATEGY', 'dev' );
+        define( 'KAJU_BLOG_VITE_INTERNAL_ORIGIN', 'http://vite:5173' );
 
   vite:
     image: node:20-alpine

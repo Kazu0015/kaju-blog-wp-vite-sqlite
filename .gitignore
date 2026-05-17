@@ -61,6 +61,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# --- Playwright（動画・レポート）----------------------------------------------
+
+playwright/node_modules/
+playwright/.playwright-browsers/
+playwright/test-results/
+playwright/playwright-report/
+playwright/blob-report/
+playwright/.cache/
+
 # --- 誤コミット防止 ------------------------------------------------------------
 
 .git___/

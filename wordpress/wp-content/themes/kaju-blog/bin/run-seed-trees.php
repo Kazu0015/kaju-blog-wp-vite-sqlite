@@ -1,6 +1,6 @@
 <?php
 /**
- * 庭の木サンプルを投入
+ * 庭の木サンプルを投入（画像・アイキャッチ同期含む）
  * docker compose exec wordpress php wp-content/themes/kaju-blog/bin/run-seed-trees.php
  *
  * @package kaju-blog
@@ -17,7 +17,8 @@ require $wp_load;
 require_once get_template_directory() . '/inc/seed-trees.php';
 
 delete_option( 'kaju_blog_seed_trees_version' );
-$count = kaju_blog_seed_sample_trees( true );
+$created = kaju_blog_seed_sample_trees( true );
+$synced  = kaju_blog_sync_sample_tree_thumbnails( false );
 update_option( 'kaju_blog_seed_trees_version', KAJU_BLOG_SEED_TREES_VERSION, false );
 
-echo sprintf( "Seeded %d tree post(s) with images.\n", $count );
+echo sprintf( "Created %d tree post(s); synced %d thumbnail(s).\n", $created, $synced );

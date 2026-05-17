@@ -1,0 +1,15 @@
+{
+  "name": "kaju-blog-playwright",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright test",
+    "test:headed": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright test --headed",
+    "install:browsers": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.0"
+  }
+}

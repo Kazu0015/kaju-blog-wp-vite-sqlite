@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const KAJU_BLOG_SEED_TREES_VERSION = '1.0.0';
+const KAJU_BLOG_SEED_TREES_VERSION = '1.1.0';
 
 add_action( 'init', 'kaju_blog_maybe_seed_sample_trees', 36 );
 
@@ -16,10 +16,9 @@ function kaju_blog_maybe_seed_sample_trees(): void {
 		return;
 	}
 
-	$created = kaju_blog_seed_sample_trees();
-	if ( $created > 0 ) {
-		update_option( 'kaju_blog_seed_trees_version', KAJU_BLOG_SEED_TREES_VERSION, false );
-	}
+	kaju_blog_seed_sample_trees();
+	kaju_blog_sync_sample_tree_thumbnails( true );
+	update_option( 'kaju_blog_seed_trees_version', KAJU_BLOG_SEED_TREES_VERSION, false );
 }
 
 /**
@@ -33,16 +32,65 @@ function kaju_blog_seed_sample_trees( bool $force_version = false ): int {
 
 	$created = 0;
 	foreach ( kaju_blog_sample_tree_definitions() as $def ) {
-		if ( kaju_blog_upsert_sample_tree( $def ) ) {
+		if ( kaju_blog_upsert_sample_tree( $def, false ) ) {
 			++$created;
 		}
 	}
 
-	if ( $created > 0 && ! $force_version ) {
+	kaju_blog_sync_sample_tree_thumbnails( false );
+
+	if ( ( $created > 0 || $force_version ) && ! $force_version ) {
 		update_option( 'kaju_blog_seed_trees_version', KAJU_BLOG_SEED_TREES_VERSION, false );
 	}
 
 	return $created;
+}
+
+/**
+ * サンプル定義のアイキャッチを既存投稿に紐づけ
+ *
+ * @param bool $only_missing true のとき未設定の投稿のみ
+ * @return int 更新件数
+ */
+function kaju_blog_sync_sample_tree_thumbnails( bool $only_missing = true ): int {
+	if ( ! function_exists( 'kaju_blog_import_theme_image' ) ) {
+		return 0;
+	}
+
+	$synced = 0;
+	foreach ( kaju_blog_sample_tree_definitions() as $def ) {
+		$slug = (string) ( $def['slug'] ?? '' );
+		if ( '' === $slug || empty( $def['featured_image'] ) || ! is_string( $def['featured_image'] ) ) {
+			continue;
+		}
+
+		$existing = get_posts(
+			array(
+				'post_type'              => 'tree',
+				'name'                   => $slug,
+				'posts_per_page'         => 1,
+				'post_status'            => 'any',
+				'fields'                 => 'ids',
+				'update_post_meta_cache' => false,
+			)
+		);
+
+		if ( empty( $existing ) ) {
+			continue;
+		}
+
+		$post_id = (int) $existing[0];
+		if ( $only_missing && kaju_blog_post_has_thumbnail( $post_id ) ) {
+			continue;
+		}
+
+		$featured_id = kaju_blog_import_theme_image( $def['featured_image'] );
+		if ( $featured_id > 0 && set_post_thumbnail( $post_id, $featured_id ) ) {
+			++$synced;
+		}
+	}
+
+	return $synced;
 }
 
 /**
@@ -82,7 +130,7 @@ function kaju_blog_sample_tree_definitions(): array {
 /**
  * @param array<string, mixed> $def
  */
-function kaju_blog_upsert_sample_tree( array $def ): bool {
+function kaju_blog_upsert_sample_tree( array $def, bool $update_existing = false ): bool {
 	$slug = (string) ( $def['slug'] ?? '' );
 	if ( '' === $slug ) {
 		return false;
@@ -99,26 +147,38 @@ function kaju_blog_upsert_sample_tree( array $def ): bool {
 		)
 	);
 
-	if ( ! empty( $existing ) ) {
+	$is_update = ! empty( $existing );
+
+	if ( $is_update && ! $update_existing ) {
 		return false;
 	}
 
-	$post_id = wp_insert_post(
-		array(
-			'post_type'    => 'tree',
-			'post_status'  => 'publish',
-			'post_name'    => $slug,
-			'post_title'   => (string) ( $def['title'] ?? $slug ),
-			'post_content' => (string) ( $def['content'] ?? '' ),
-		),
-		true
-	);
+	if ( $is_update ) {
+		$post_id = (int) $existing[0];
+		wp_update_post(
+			array(
+				'ID'           => $post_id,
+				'post_title'   => (string) ( $def['title'] ?? $slug ),
+				'post_content' => (string) ( $def['content'] ?? '' ),
+			)
+		);
+	} else {
+		$post_id = wp_insert_post(
+			array(
+				'post_type'    => 'tree',
+				'post_status'  => 'publish',
+				'post_name'    => $slug,
+				'post_title'   => (string) ( $def['title'] ?? $slug ),
+				'post_content' => (string) ( $def['content'] ?? '' ),
+			),
+			true
+		);
 
-	if ( is_wp_error( $post_id ) || ! $post_id ) {
-		return false;
+		if ( is_wp_error( $post_id ) || ! $post_id ) {
+			return false;
+		}
+		$post_id = (int) $post_id;
 	}
-
-	$post_id = (int) $post_id;
 
 	$fruit = (string) ( $def['fruit'] ?? '' );
 	if ( $fruit && taxonomy_exists( 'fruit' ) ) {
@@ -134,12 +194,12 @@ function kaju_blog_upsert_sample_tree( array $def ): bool {
 
 	if ( function_exists( 'update_field' ) ) {
 		$acf_map = array(
-			'planted_year'    => $def['planted_year'] ?? '',
-			'rootstock'       => $def['rootstock'] ?? '',
-			'pollinator'      => $def['pollinator'] ?? '',
-			'bloom_season'    => $def['bloom_season'] ?? '',
-			'harvest_season'  => $def['harvest_season'] ?? '',
-			'status_note'     => $def['status_note'] ?? '',
+			'planted_year'   => $def['planted_year'] ?? '',
+			'rootstock'      => $def['rootstock'] ?? '',
+			'pollinator'     => $def['pollinator'] ?? '',
+			'bloom_season'   => $def['bloom_season'] ?? '',
+			'harvest_season' => $def['harvest_season'] ?? '',
+			'status_note'    => $def['status_note'] ?? '',
 		);
 		foreach ( $acf_map as $key => $value ) {
 			if ( '' !== (string) $value ) {
@@ -148,5 +208,5 @@ function kaju_blog_upsert_sample_tree( array $def ): bool {
 		}
 	}
 
-	return true;
+	return ! $is_update;
 }

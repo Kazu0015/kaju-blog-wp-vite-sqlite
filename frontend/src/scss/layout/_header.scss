@@ -47,16 +47,32 @@ layout > header
   @include g.mq(md) {
     gap: 80px;
   }
+
+  h1 a,
+  > div a {
+    display: block;
+
+    @media (hover: hover) {
+      &:hover .header__logo {
+        opacity: 0.6;
+      }
+    }
+
+    &:active .header__logo {
+      opacity: 0.6;
+    }
+  }
 }
 
 .header__logo {
   width: 73px;
   height: auto;
+  transition: opacity 0.3s ease;
 
   @include g.mq(md) {
     width: 95px;
     height: auto;
-  } 
+  }
 }
 
 .header__title {
@@ -69,6 +85,22 @@ layout > header
 
   span {
     display: block;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
   }
 
   @include g.mq(md) {

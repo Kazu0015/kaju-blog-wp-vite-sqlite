@@ -63,9 +63,21 @@ function isTopKvDebugEnabled() {
   return false;
 }
 
+/** @type {{ cleanup: (() => void) | null }} */
+const topKvRuntime = { cleanup: null };
+
+function destroyTopKvSlideshow() {
+  if (typeof topKvRuntime.cleanup === "function") {
+    topKvRuntime.cleanup();
+    topKvRuntime.cleanup = null;
+  }
+}
+
 function initTopKvSlideshow() {
   const list = document.querySelector(".top-kv__image-list");
   if (!list) return;
+
+  destroyTopKvSlideshow();
 
   const items = Array.from(list.querySelectorAll(".top-kv__image-item"));
   if (items.length === 0) return;
@@ -185,9 +197,7 @@ function initTopKvSlideshow() {
     if (!TOP_KV_LEAD_LINES || layers.length < 2) return;
     const lines = TOP_KV_LEAD_LINES[i];
     if (!lines) return;
-    const fromIdx = leadVisibleLayerIndex;
-    const toIdx = 1 - fromIdx;
-    const fromLayer = layers[fromIdx];
+    const toIdx = 1 - leadVisibleLayerIndex;
     const toLayer = layers[toIdx];
     const ps = toLayer.querySelectorAll(".top-kv__lead-text");
     if (ps.length < 2) return;
@@ -196,9 +206,11 @@ function initTopKvSlideshow() {
     ps[1].textContent = lines[1];
     if (kvDebug) snapshotKvLayout(`lead:afterTextSwap slide=${i}`);
     if (kvDebug) snapshotKvLayout(`lead:beforeClassSwap slide=${i}`);
-    fromLayer.classList.remove("top-kv__lead-layer--visible");
+    layers.forEach((layer) => {
+      layer.classList.remove("top-kv__lead-layer--visible");
+      layer.setAttribute("aria-hidden", "true");
+    });
     toLayer.classList.add("top-kv__lead-layer--visible");
-    fromLayer.setAttribute("aria-hidden", "true");
     toLayer.setAttribute("aria-hidden", "false");
     leadVisibleLayerIndex = toIdx;
     if (kvDebug) snapshotKvLayout(`lead:afterClassSwap slide=${i}`);
@@ -323,6 +335,15 @@ function initTopKvSlideshow() {
     mqMobile.addListener(sync);
   }
 
+  topKvRuntime.cleanup = () => {
+    stop();
+    if (typeof mqMobile.removeEventListener === "function") {
+      mqMobile.removeEventListener("change", sync);
+    } else {
+      mqMobile.removeListener(sync);
+    }
+  };
+
   sync();
 }
 
@@ -373,15 +394,23 @@ function initPrivacyPolicySections() {
   }
 }
 
-applyKvOffFromQuery();
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    bootTopKv();
-    initLikeButtons();
-    initPrivacyPolicySections();
-  });
-} else {
+function boot() {
   bootTopKv();
   initLikeButtons();
   initPrivacyPolicySections();
+}
+
+applyKvOffFromQuery();
+
+/** bfcache 復帰時は古いタイマー・リード状態が残るため再初期化 */
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted && document.querySelector(".top-kv__image-list")) {
+    bootTopKv();
+  }
+});
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
 }

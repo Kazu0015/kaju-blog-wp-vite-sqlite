@@ -32,9 +32,9 @@ get_header();
 		<header class="record-header">
 			<h1 class="record-header__title">
 				<?php
-				if ( is_tax( 'fruit' ) ) {
-					$term = get_queried_object();
-					echo esc_html( $term instanceof WP_Term ? $term->name : '' );
+				$filter_label = kaju_blog_get_record_fruit_filter_label();
+				if ( '' !== $filter_label ) {
+					echo esc_html( $filter_label );
 				} else {
 					post_type_archive_title();
 				}
@@ -70,7 +70,15 @@ get_header();
 				);
 				?>
 			<?php else : ?>
-				<p>栽培記録はまだありません。</p>
+				<p>
+					<?php
+					if ( '' !== kaju_blog_get_record_fruit_filter_slug() ) {
+						esc_html_e( 'この果樹の栽培記録はまだありません。', 'kaju-blog' );
+					} else {
+						esc_html_e( '栽培記録はまだありません。', 'kaju-blog' );
+					}
+					?>
+				</p>
 			<?php endif; ?>
 		</section>
 	</div>

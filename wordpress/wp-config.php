@@ -137,9 +137,11 @@ if ( ! defined( 'DB_FILE' ) ) {
 
 // Vite: 開発サーバ（frontend / compose の vite で npm run dev）。本番は WORDPRESS_CONFIG_EXTRA で prod に上書き。
 defined( 'KAJU_BLOG_VITE_ORIGIN' ) || define( 'KAJU_BLOG_VITE_ORIGIN', 'http://localhost:5173' );
+// vite.config.js の base と一致（dev 時の @vite/client / エントリ URL 用）
+defined( 'KAJU_BLOG_VITE_BASE' ) || define( 'KAJU_BLOG_VITE_BASE', '/wp-content/themes/kaju-blog/assets/' );
 // manifest のエントリキー（vite.config の rollup input と必ず一致）
 define( 'KAJU_BLOG_VITE_ENTRY', 'src/js/main.js' );
-// 読み込み切替: auto（manifest があればビルド済み）| dev（常に Vite 5173・HMR）| prod（常に manifest）
+// 読み込み切替: auto（Vite 起動中は HMR、未起動は manifest）| dev | prod
 defined( 'KAJU_BLOG_VITE_STRATEGY' ) || define( 'KAJU_BLOG_VITE_STRATEGY', 'auto' );
 
 // If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact
