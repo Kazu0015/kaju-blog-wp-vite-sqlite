@@ -44,11 +44,14 @@ SCSS や JavaScript のファイルを保存するたびに、**ページリロ�
 
 ```
 .
-├── docker-compose.yml          # Docker サービス定義
+├── docker-compose.dev.yml      # ローカル開発用 Compose
+├── docker-compose.prod.yml     # 本番（Traefik）用 Compose
+├── .env.sample                 # 本番・デプロイ用環境変数の雛形
+├── deploy-rsync.sh             # VPS へ rsync デプロイ
 ├── Dockerfile                  # WordPress + SQLite イメージ
 ├── docker-entrypoint-sqlite.sh # コンテナ起動時の SQLite セットアップ
-├── up_dev.sh                   # 起動スクリプト
-├── down_dev.sh                 # 停止スクリプト
+├── up_dev.sh / down_dev.sh     # 開発の起動・停止
+├── up_prod.sh / down_prod.sh   # 本番の起動・停止（VPS 上）
 │
 ├── frontend/                   # Vite フロントエンド（編集するのはここ）
 │   ├── src/
@@ -137,30 +140,72 @@ frontend/src/scss/main.scss   ← SCSS を書く（@use でパーシャルを読
 
 開発が完了したら、JS・CSS をビルドしてサーバに配置します。
 
-### 1. アセットをビルド
+### アセットをビルド
 
 ```bash
-docker compose run --rm vite npm run build
+docker compose -f docker-compose.dev.yml run --rm vite npm run build
 ```
 
 `wordpress/wp-content/themes/kaju-blog/assets/` にビルド済みファイルが生成されます。
 
-### 2. 本番モードに切り替え
-
-`wordpress/wp-config.php` の以下の行のコメントを外します。
-
-```php
-// この行を有効化する
-define( 'KAJU_BLOG_VITE_STRATEGY', 'prod' );
-```
+本番コンテナでは `docker-compose.prod.yml` の `WORDPRESS_CONFIG_EXTRA` により `KAJU_BLOG_VITE_STRATEGY` が `prod` になり、ビルド済みアセットのみを読み込みます。
 
 | 値 | 動作 |
 |---|---|
-| 未設定（既定） | 常に Vite dev サーバを使用（開発時） |
-| `'auto'` | ビルド済みファイルがあれば本番、なければ dev サーバ |
-| `'prod'` | 常にビルド済みファイルを使用（本番時） |
+| `'auto'`（ローカル既定） | manifest があれば本番、なければ dev サーバ |
+| `'prod'`（本番コンテナ） | 常にビルド済みファイルを使用 |
 
 ---
+
+## VPS 本番デプロイ（Traefik）
+
+本番 URL: **https://kaju-blog.webcerto.net/**
+
+### 1. 環境ファイルを用意（初回のみ）
+
+```bash
+cp .env.sample .env          # デプロイ用（DEPLOY_TARGET 等）
+cp .env.sample .env.prod     # VPS 上の compose 用（DOMAIN / WP_HOME）
+```
+
+`.env` の `DEPLOY_TARGET` と `DEPLOY_SSH_KEY` を編集してください。  
+`.env.prod` の `DOMAIN` / `WP_HOME` は `.env.sample` の既定値（`kaju-blog.webcerto.net`）のままで問題ありません。
+
+VPS へ `.env.prod` も送る場合:
+
+```bash
+# .env に追記
+DEPLOY_ENV_FILE=.env.prod
+```
+
+### 2. ローカルから rsync デプロイ
+
+```bash
+./deploy-rsync.sh
+```
+
+ビルド → Docker 関連ファイルと `wordpress/` を転送します（`wp-content/database/` は除外し、サーバー上の DB を保持）。  
+コンテナが起動中なら、有効テーマを `kaju-blog` に自動で揃えます（旧 DB で `kaju` のまま残っていると真っ白画面になるため）。
+
+### 3. VPS でコンテナ起動
+
+```bash
+./ssh_connect.sh
+cd /home/kazu/docker_doc/kaju_blog
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+```
+
+停止する場合: `docker compose -f docker-compose.prod.yml --env-file .env.prod down`
+
+> 同一ドメインで旧 `kaju_blog_vite_wp` が稼働中の場合は、先に旧コンテナを停止してから起動してください。
+
+本番コンテナ（`KAJU_BLOG_VITE_STRATEGY=prod`）では、mu-plugin により次が自動で無効になります。
+
+- **Show Current Template**（管理バーの「テンプレート: …」）
+- **SQLite** 管理バーの「Database: SQLite」表示
+
+---
+
 
 ## テーマのカスタマイズ
 

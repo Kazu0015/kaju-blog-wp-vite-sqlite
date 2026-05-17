@@ -16,3 +16,6 @@ if ( is_readable( $kaju_blog_mu_dir . '/docker.php' ) ) {
 if ( is_readable( $kaju_blog_mu_dir . '/vite.php' ) ) {
 	require_once $kaju_blog_mu_dir . '/vite.php';
 }
+if ( is_readable( $kaju_blog_mu_dir . '/production.php' ) ) {
+	require_once $kaju_blog_mu_dir . '/production.php';
+}

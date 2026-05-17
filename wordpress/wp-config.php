@@ -119,8 +119,14 @@ define( 'WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', '') );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-define( 'WP_HOME', 'http://localhost:8080' );
-define( 'WP_SITEURL', 'http://localhost:8080' );
+// WORDPRESS_CONFIG_EXTRA を先に評価することで、WP_HOME 等を本番用に上書き可能にする
+if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
+	eval($configExtra);
+}
+
+// CONFIG_EXTRA で定義済みの場合はローカル開発用デフォルトをスキップ
+defined( 'WP_HOME' )    || define( 'WP_HOME',    'http://localhost:8080' );
+defined( 'WP_SITEURL' ) || define( 'WP_SITEURL', 'http://localhost:8080' );
 /** コンテナ内ループバック用（Site Health の REST 自己取得など）。Apache はコンテナ内で 80 番のみ。 */
 define( 'KAJU_BLOG_WP_LOOPBACK_HTTP_BASE', 'http://127.0.0.1' );
 
@@ -129,13 +135,12 @@ if ( ! defined( 'DB_FILE' ) ) {
 	define( 'DB_FILE', '.ht.sqlite' );
 }
 
-// Vite: 開発サーバ（frontend / compose の vite で npm run dev）。使わないときはコメントアウト。
-define( 'KAJU_BLOG_VITE_ORIGIN', 'http://localhost:5173' );
+// Vite: 開発サーバ（frontend / compose の vite で npm run dev）。本番は WORDPRESS_CONFIG_EXTRA で prod に上書き。
+defined( 'KAJU_BLOG_VITE_ORIGIN' ) || define( 'KAJU_BLOG_VITE_ORIGIN', 'http://localhost:5173' );
 // manifest のエントリキー（vite.config の rollup input と必ず一致）
 define( 'KAJU_BLOG_VITE_ENTRY', 'src/js/main.js' );
-// 読み込み切替: auto（manifest があればビルド済み CSS）| dev（常に Vite 5173・HMR）| prod（常に manifest）
-// Vite を起動していないときは auto / prod でないと CSS が当たらない。
-define( 'KAJU_BLOG_VITE_STRATEGY', 'auto' );
+// 読み込み切替: auto（manifest があればビルド済み）| dev（常に Vite 5173・HMR）| prod（常に manifest）
+defined( 'KAJU_BLOG_VITE_STRATEGY' ) || define( 'KAJU_BLOG_VITE_STRATEGY', 'auto' );
 
 // If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact
 // see also https://wordpress.org/support/article/administration-over-ssl/#using-a-reverse-proxy
@@ -143,10 +148,6 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARD
 	$_SERVER['HTTPS'] = 'on';
 }
 // (we include this by default because reverse proxying is extremely common in container environments)
-
-if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
-	eval($configExtra);
-}
 
 /* That's all, stop editing! Happy publishing. */
 

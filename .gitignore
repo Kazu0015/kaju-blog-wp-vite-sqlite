@@ -32,6 +32,7 @@ frontend/dist/
 .env
 .env.*
 !.env.example
+!.env.sample
 
 # --- Docker（ローカル上書きのみ）----------------------------------------------
 

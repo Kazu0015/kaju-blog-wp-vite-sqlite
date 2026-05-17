@@ -1,0 +1,62 @@
+# 本番向け Compose（Traefik 経由・ホストに直接ポート公開なし）
+#
+# 前提:
+#   - 同一ホストで Traefik が稼働し、外部ネットワーク traefik-network（名前は .env で変更可）に接続できること
+#   - テーマの JS/CSS はビルド済み（frontend で npm run build → themes/kaju-blog/assets）
+#   - ./wordpress をマウント（SQLite プラグインは Dockerfile の entrypoint で復元）
+#
+# 環境変数: .env.sample を参照し、.env または .env.prod にコピーして編集
+#
+# 例: docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+#
+services:
+  wordpress:
+    build: .
+    platform: linux/amd64
+    container_name: kaju_blog_wordpress_prod
+    expose:
+      - "80"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - ./wordpress:/var/www/html
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
+
+      # HTTP → HTTPS
+      - "traefik.http.routers.kaju_blog-http.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.kaju_blog-http.entrypoints=http"
+      - "traefik.http.routers.kaju_blog-http.middlewares=kaju_blog_redirect-to-https"
+      - "traefik.http.routers.kaju_blog-http.service=kaju_blog"
+
+      # HTTPS
+      - "traefik.http.routers.kaju_blog-secure.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.kaju_blog-secure.entrypoints=https"
+      - "traefik.http.routers.kaju_blog-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kaju_blog-secure.service=kaju_blog"
+
+      - "traefik.http.middlewares.kaju_blog_redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.kaju_blog_redirect-to-https.redirectscheme.permanent=true"
+
+      - "traefik.http.services.kaju_blog.loadbalancer.server.port=80"
+
+    environment:
+      WORDPRESS_DEBUG: "0"
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'KAJU_BLOG_VITE_STRATEGY', 'prod' );
+        defined( 'WP_ENVIRONMENT_TYPE' ) || define( 'WP_ENVIRONMENT_TYPE', 'production' );
+        defined( 'WP_HOME' )    || define( 'WP_HOME',    '${WP_HOME:-http://localhost}' );
+        defined( 'WP_SITEURL' ) || define( 'WP_SITEURL', '${WP_HOME:-http://localhost}' );
+
+networks:
+  traefik-network:
+    name: ${TRAEFIK_NETWORK:-traefik-network}
+    external: true
