@@ -1,0 +1,59 @@
+@use "../../global" as g;
+
+/*!
+page > tree > archive
+------------------------------
+*/
+.tree-archive__header {
+  margin-bottom: 8px;
+}
+
+.tree-archive__lead {
+  margin: 16px 0 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  text-align: center;
+
+  @include g.mq(md) {
+    font-size: 20px;
+  }
+}
+
+.tree-archive__empty {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  color: var(--color-disable);
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.tree-archive__card-list .c-tree-card {
+  height: 100%;
+}
+
+.c-tree-card__planted {
+  font-size: 18px;
+
+  @include g.mq(md) {
+    font-size: 20px;
+  }
+}
+
+.c-tree-card__seasons {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: var(--color-main);
+  text-align: left;
+
+  @include g.mq(md) {
+    font-size: 18px;
+  }
+}

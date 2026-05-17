@@ -93,7 +93,7 @@ $variety_items = array(
 			<ul class="top-variety__list">
 				<?php foreach ( $variety_items as $item ) : ?>
 					<li class="top-variety__item">
-						<a href="<?php echo esc_url( home_url( '/varieties/' . $item['slug'] . '/' ) ); ?>" class="top-variety__link">
+						<a href="<?php echo esc_url( kaju_blog_fruit_archive_url( $item['slug'] ) ); ?>" class="top-variety__link">
 							<img class="top-variety__image" src="<?php echo esc_url( kaju_blog_asset_uri( 'img/top/' . $item['icon'] ) ); ?>" alt="" width="800" height="800" loading="lazy" decoding="async">
 							<div class="top-variety__body">
 								<h3 class="top-variety__title"><?php echo esc_html( $item['title'] ); ?></h3>

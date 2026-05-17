@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /** セットアップ内容を変えたらバージョンを上げる（リライト再フラッシュ・ページ再チェック） */
-const KAJU_BLOG_SETUP_VERSION = '1.0.1';
+const KAJU_BLOG_SETUP_VERSION = '1.1.0';
 
 add_action( 'init', 'kaju_blog_run_setup', 20 );
 
@@ -31,10 +31,6 @@ function kaju_blog_required_pages(): array {
 		'privacy-policy'  => array(
 			'title'   => 'プライバシーポリシー',
 			'content' => '<p>プライバシーポリシーの本文を編集してください。</p>',
-		),
-		'varieties'       => array(
-			'title'   => '品種別',
-			'content' => '<p>準備中です。</p>',
 		),
 		'memo'            => array(
 			'title'   => '作業メモ',

@@ -22,13 +22,13 @@ while ( have_posts() ) :
 	$motivation    = function_exists( 'get_field' ) ? (string) get_field( 'profile_motivation', $page_id ) : '';
 
 	if ( '' === $hero_name ) {
-		$hero_name = 'ゆう';
+		$hero_name = 'かず';
 	}
 	if ( '' === $hero_role ) {
 		$hero_role = 'ブログ主';
 	}
 	if ( '' === $hero_tagline ) {
-		$hero_tagline = '週末ひとり、小さな庭で果樹と暮らしています。';
+		$hero_tagline = '週末、小さな庭で果樹と暮らしています。';
 	}
 	if ( '' === $hero_text ) {
 		$hero_text = '会社員の平日はデスクワーク。休日は庭先の果樹と向き合う、ゆるやかな暮らしを送っています。';

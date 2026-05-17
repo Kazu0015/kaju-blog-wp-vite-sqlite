@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once get_template_directory() . '/inc/helpers.php';
+require_once get_template_directory() . '/inc/pagination.php';
 require_once get_template_directory() . '/inc/cpt.php';
 require_once get_template_directory() . '/inc/setup.php';
 require_once get_template_directory() . '/inc/cf7.php';
@@ -18,6 +19,8 @@ require_once get_template_directory() . '/inc/seed-records.php';
 require_once get_template_directory() . '/inc/admin-record-edit.php';
 require_once get_template_directory() . '/inc/acf-record-fields.php';
 require_once get_template_directory() . '/inc/cpt-memo.php';
+require_once get_template_directory() . '/inc/cpt-tree.php';
+require_once get_template_directory() . '/inc/seed-trees.php';
 require_once get_template_directory() . '/inc/seed-memos.php';
 
 add_action( 'after_setup_theme', 'kaju_blog_setup' );

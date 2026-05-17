@@ -31,5 +31,8 @@ if ( '' === $excerpt ) {
 		<?php if ( $excerpt ) : ?>
 			<p class="c-log-card__excerpt"><?php echo esc_html( $excerpt ); ?></p>
 		<?php endif; ?>
+		<div class="c-log-card__meta">
+			<img class="c-log-card__meta-like" src="<?php echo esc_url( kaju_blog_asset_uri( 'img/top/icon-thumb-up.svg' ) ); ?>" alt="" width="20" height="20" loading="lazy" decoding="async">
+		</div>
 	</div>
 </a>

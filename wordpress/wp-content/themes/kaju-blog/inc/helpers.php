@@ -8,6 +8,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * 一覧アーカイブの1ページあたり件数（3列グリッド向け）
+ */
+function kaju_blog_archive_posts_per_page(): int {
+	return 9;
+}
+
+/**
  * テーマ内静的ファイル URL（img/ 等）
  */
 function kaju_blog_asset_uri( string $path = '' ): string {
@@ -62,9 +69,9 @@ function kaju_blog_nav_items(): array {
 			'slug'  => 'records',
 		),
 		array(
-			'label' => '品種別',
-			'url'   => home_url( '/varieties/' ),
-			'slug'  => 'varieties',
+			'label' => '庭の木',
+			'url'   => get_post_type_archive_link( 'tree' ) ?: home_url( '/trees/' ),
+			'slug'  => 'trees',
 		),
 		array(
 			'label' => '作業メモ',
@@ -94,14 +101,14 @@ function kaju_blog_current_nav_slug(): string {
 	if ( is_post_type_archive( 'record' ) || is_singular( 'record' ) || is_tax( 'fruit' ) ) {
 		return 'records';
 	}
+	if ( is_post_type_archive( 'tree' ) || is_singular( 'tree' ) ) {
+		return 'trees';
+	}
 	if ( is_page( 'profile' ) ) {
 		return 'profile';
 	}
 	if ( is_page( 'contact' ) ) {
 		return 'contact';
-	}
-	if ( is_page( 'varieties' ) ) {
-		return 'varieties';
 	}
 	if ( is_page( 'memo' ) || is_singular( 'work_memo' ) ) {
 		return 'memo';
@@ -110,7 +117,21 @@ function kaju_blog_current_nav_slug(): string {
 }
 
 /**
- * record 投稿の果樹バッジ modifier
+ * 果樹タクソノミーアーカイブ URL（栽培記録の絞り込み）
+ */
+function kaju_blog_fruit_archive_url( string $slug ): string {
+	$term = get_term_by( 'slug', $slug, 'fruit' );
+	if ( $term instanceof WP_Term ) {
+		$link = get_term_link( $term );
+		if ( ! is_wp_error( $link ) ) {
+			return (string) $link;
+		}
+	}
+	return home_url( '/records/fruit/' . rawurlencode( $slug ) . '/' );
+}
+
+/**
+ * 投稿の果樹バッジ modifier（record / tree 共通）
  */
 function kaju_blog_record_fruit_modifier( int $post_id ): string {
 	$terms = get_the_terms( $post_id, 'fruit' );
@@ -123,7 +144,7 @@ function kaju_blog_record_fruit_modifier( int $post_id ): string {
 }
 
 /**
- * record 投稿の果樹ラベル
+ * 投稿の果樹ラベル（record / tree 共通）
  */
 function kaju_blog_record_fruit_label( int $post_id ): string {
 	$terms = get_the_terms( $post_id, 'fruit' );
@@ -133,6 +154,57 @@ function kaju_blog_record_fruit_label( int $post_id ): string {
 	$slug = $terms[0]->slug;
 	$map  = kaju_blog_fruit_map();
 	return $map[ $slug ]['label'] ?? $terms[0]->name;
+}
+
+/**
+ * 庭の木: 植えた年（ACF date → 4桁年、未設定は null）
+ */
+function kaju_blog_tree_planted_year( int $post_id ): ?int {
+	if ( ! function_exists( 'get_field' ) ) {
+		return null;
+	}
+	$value = get_field( 'planted_year', $post_id );
+	if ( empty( $value ) ) {
+		return null;
+	}
+	$raw = (string) $value;
+	if ( preg_match( '/^\d{8}$/', $raw ) ) {
+		return (int) substr( $raw, 0, 4 );
+	}
+	if ( preg_match( '/^\d{4}$/', $raw ) ) {
+		return (int) $raw;
+	}
+	$timestamp = strtotime( $raw );
+	if ( false === $timestamp ) {
+		return null;
+	}
+	return (int) gmdate( 'Y', $timestamp );
+}
+
+/**
+ * 庭の木: 樹齢表示（植えた年から算出）
+ */
+function kaju_blog_tree_age_label( int $post_id ): string {
+	$year = kaju_blog_tree_planted_year( $post_id );
+	if ( null === $year ) {
+		return '';
+	}
+	$age = (int) gmdate( 'Y' ) - $year;
+	if ( $age < 0 ) {
+		return '';
+	}
+	return sprintf( '樹齢 %d年', $age );
+}
+
+/**
+ * 庭の木: 植えた年の表示ラベル
+ */
+function kaju_blog_tree_planted_year_label( int $post_id ): string {
+	$year = kaju_blog_tree_planted_year( $post_id );
+	if ( null === $year ) {
+		return '';
+	}
+	return sprintf( '植えた年 %d', $year );
 }
 
 /**

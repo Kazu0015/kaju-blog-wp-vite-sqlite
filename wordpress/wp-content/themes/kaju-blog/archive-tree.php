@@ -1,6 +1,6 @@
 <?php
 /**
- * 栽培記録一覧
+ * 庭の木一覧
  *
  * @package kaju-blog
  */
@@ -21,7 +21,7 @@ get_header();
 						'label' => 'ホーム',
 						'url'   => home_url( '/' ),
 					),
-					array( 'label' => '栽培記録' ),
+					array( 'label' => '庭の木' ),
 				),
 			)
 		);
@@ -29,23 +29,15 @@ get_header();
 
 		<?php get_template_part( 'template-parts/record', 'filter' ); ?>
 
-		<header class="record-header">
-			<h1 class="record-header__title">
-				<?php
-				if ( is_tax( 'fruit' ) ) {
-					$term = get_queried_object();
-					echo esc_html( $term instanceof WP_Term ? $term->name : '' );
-				} else {
-					post_type_archive_title();
-				}
-				?>
-			</h1>
+		<header class="record-header tree-archive__header">
+			<h1 class="record-header__title"><?php post_type_archive_title(); ?></h1>
+			<p class="tree-archive__lead">庭に植わっている木々の素性をまとめています。</p>
 		</header>
 
-		<section class="record-list" aria-labelledby="record-list-heading">
-			<h2 id="record-list-heading" class="u-visually-hidden">栽培記録一覧</h2>
+		<section class="record-list tree-archive" aria-labelledby="tree-archive-heading">
+			<h2 id="tree-archive-heading" class="u-visually-hidden">庭の木一覧</h2>
 			<?php if ( have_posts() ) : ?>
-				<ul class="record-list__card-list">
+				<ul class="record-list__card-list tree-archive__card-list">
 					<?php
 					while ( have_posts() ) :
 						the_post();
@@ -53,7 +45,7 @@ get_header();
 						<li class="record-list__card-item">
 							<?php
 							get_template_part(
-								'template-parts/log',
+								'template-parts/tree',
 								'card',
 								array( 'post' => get_post() )
 							);
@@ -70,7 +62,7 @@ get_header();
 				);
 				?>
 			<?php else : ?>
-				<p>栽培記録はまだありません。</p>
+				<p class="tree-archive__empty">庭の木はまだ登録されていません。</p>
 			<?php endif; ?>
 		</section>
 	</div>

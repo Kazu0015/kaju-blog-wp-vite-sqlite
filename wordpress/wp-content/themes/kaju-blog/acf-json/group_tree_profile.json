@@ -1,0 +1,63 @@
+{
+    "key": "group_tree_profile",
+    "title": "tree_profile",
+    "fields": [
+        {
+            "key": "field_tree_planted_year",
+            "label": "植えた年",
+            "name": "planted_year",
+            "type": "date_picker",
+            "display_format": "Y",
+            "return_format": "Y",
+            "first_day": 0
+        },
+        {
+            "key": "field_tree_rootstock",
+            "label": "台木",
+            "name": "rootstock",
+            "type": "text"
+        },
+        {
+            "key": "field_tree_pollinator",
+            "label": "受粉樹",
+            "name": "pollinator",
+            "type": "text"
+        },
+        {
+            "key": "field_tree_bloom_season",
+            "label": "開花期",
+            "name": "bloom_season",
+            "type": "text"
+        },
+        {
+            "key": "field_tree_harvest_season",
+            "label": "収穫期",
+            "name": "harvest_season",
+            "type": "text"
+        },
+        {
+            "key": "field_tree_status_note",
+            "label": "現在の状態メモ",
+            "name": "status_note",
+            "type": "textarea",
+            "rows": 4,
+            "new_lines": "br"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "tree"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "modified": 0
+}

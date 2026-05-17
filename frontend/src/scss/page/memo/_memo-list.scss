@@ -26,6 +26,10 @@ page > memo > list
   height: 100%;
 }
 
+.memo-list__grid .c-log-card__meta {
+  justify-content: flex-end;
+}
+
 .memo-list__empty {
   font-size: 18px;
   font-weight: 500;

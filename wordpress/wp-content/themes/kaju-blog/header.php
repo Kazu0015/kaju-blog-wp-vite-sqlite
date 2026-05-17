@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 $kaju_blog_nav_icons = array(
 	'records'   => 'img/top/img-diary.png',
-	'varieties' => 'img/top/img-variety.png',
+	'trees'     => 'img/top/img-variety.png',
 	'memo'      => 'img/top/img-memo.png',
 	'profile'   => 'img/top/img-profile.png',
 	'contact'   => 'img/top/img-contact.png',

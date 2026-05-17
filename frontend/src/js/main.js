@@ -332,12 +332,18 @@ function bootTopKv() {
 }
 
 function initLikeButtons() {
-  document.querySelectorAll(".c-log-card__meta-like").forEach((icon) => {
-    icon.addEventListener("click", (e) => {
+  document.addEventListener(
+    "click",
+    (e) => {
+      const icon = e.target.closest(".c-log-card__meta-like");
+      if (!icon) return;
+
+      e.preventDefault();
       e.stopPropagation();
       icon.classList.toggle("is-liked");
-    });
-  });
+    },
+    true
+  );
 }
 
 /** PC幅ではアコーディオンをすべて展開、SP幅では閉じた状態から操作可能にする */

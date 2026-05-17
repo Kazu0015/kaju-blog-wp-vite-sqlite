@@ -9,7 +9,20 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'init', 'kaju_blog_register_record_cpt' );
 add_action( 'init', 'kaju_blog_register_fruit_taxonomy' );
+add_action( 'pre_get_posts', 'kaju_blog_record_archive_posts_per_page' );
 add_action( 'admin_menu', 'kaju_blog_remove_posts_menu' );
+
+/**
+ * 栽培記録一覧・果樹絞り込み: 1ページ9件（3列グリッド向け）
+ */
+function kaju_blog_record_archive_posts_per_page( WP_Query $query ): void {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+	if ( $query->is_post_type_archive( 'record' ) || $query->is_tax( 'fruit' ) ) {
+		$query->set( 'posts_per_page', kaju_blog_archive_posts_per_page() );
+	}
+}
 
 function kaju_blog_register_record_cpt(): void {
 	register_post_type(
@@ -38,7 +51,7 @@ function kaju_blog_register_record_cpt(): void {
 function kaju_blog_register_fruit_taxonomy(): void {
 	register_taxonomy(
 		'fruit',
-		array( 'record' ),
+		array( 'record', 'tree' ),
 		array(
 			'labels'            => array(
 				'name'          => '果樹',

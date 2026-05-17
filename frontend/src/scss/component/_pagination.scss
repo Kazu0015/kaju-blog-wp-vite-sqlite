@@ -59,4 +59,16 @@ component > pagination
     color: var(--color-white);
     border-color: var(--color-peach);
   }
+
+  &--dots {
+    pointer-events: none;
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--color-contrast);
+  }
+}
+
+.c-pagination__item {
+  margin: 0;
+  padding: 0;
 }

@@ -105,6 +105,66 @@ function kaju_blog_import_theme_image( string $theme_relative ): int {
 }
 
 /**
+ * ページネーション確認用の追加投稿（既存スラッグはスキップ）
+ *
+ * @return list<array<string, mixed>>
+ */
+function kaju_blog_pagination_record_definitions(): array {
+	$fruits  = array( 'peach', 'plum', 'grape', 'blueberry', 'cherry', 'prune' );
+	$images  = array(
+		'img/top/photo-peach.webp',
+		'img/top/photo-plum.webp',
+		'img/top/photo-grape.webp',
+		'img/top/photo-blueberry.webp',
+		'img/top/photo-cherry.webp',
+		'img/top/photo-prune.webp',
+	);
+	$records = array();
+
+	for ( $i = 1; $i <= 12; $i++ ) {
+		$n      = str_pad( (string) $i, 2, '0', STR_PAD_LEFT );
+		$fruit  = $fruits[ ( $i - 1 ) % count( $fruits ) ];
+		$image  = $images[ ( $i - 1 ) % count( $images ) ];
+		$month  = str_pad( (string) ( ( $i % 12 ) + 1 ), 2, '0', STR_PAD_LEFT );
+
+		$records[] = array(
+			'slug'           => 'record-pagination-' . $n,
+			'title'          => sprintf( '栽培記録（ページネーション確認 %s）', $n ),
+			'fruit'          => $fruit,
+			'date'           => sprintf( '2023-%s-15 10:00:00', $month ),
+			'excerpt'        => '一覧のページ送り動作を確認するためのサンプル投稿です。',
+			'intro'          => sprintf( 'これはページネーション確認用の栽培記録 %d 件目です。文面・画像は仮の内容です。', $i ),
+			'featured_image' => $image,
+			'section_01'     => array(
+				'section_enabled' => 1,
+				'section_title'   => 'メモ',
+				'section_body'    => '<p>2ページ目以降にこのカードが表示されれば、ページネーションは正常に動作しています。</p>',
+			),
+		);
+	}
+
+	return $records;
+}
+
+/**
+ * @return int 新規作成件数
+ */
+function kaju_blog_seed_pagination_records(): int {
+	if ( ! post_type_exists( 'record' ) ) {
+		return 0;
+	}
+
+	$created = 0;
+	foreach ( kaju_blog_pagination_record_definitions() as $def ) {
+		if ( kaju_blog_upsert_sample_record( $def, false ) ) {
+			++$created;
+		}
+	}
+
+	return $created;
+}
+
+/**
  * @return list<array<string, mixed>>
  */
 function kaju_blog_sample_record_definitions(): array {

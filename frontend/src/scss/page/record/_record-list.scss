@@ -14,12 +14,18 @@ page > record > list
 
 .record-list__card-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 32px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 
   @include g.mq(md) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include g.mq(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

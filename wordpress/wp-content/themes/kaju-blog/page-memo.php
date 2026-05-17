@@ -9,11 +9,12 @@ get_header();
 
 while ( have_posts() ) :
 	the_post();
+	$memo_paged = max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
 	$memo_query = new WP_Query(
 		array(
 			'post_type'      => 'work_memo',
-			'posts_per_page' => 12,
-			'paged'          => max( 1, (int) get_query_var( 'paged', 1 ) ),
+			'posts_per_page' => kaju_blog_archive_posts_per_page(),
+			'paged'          => $memo_paged,
 			'orderby'        => 'date',
 			'order'          => 'DESC',
 		)
@@ -70,25 +71,17 @@ while ( have_posts() ) :
 				</ul>
 
 				<?php
-				$pagination = paginate_links(
+				get_template_part(
+					'template-parts/pagination',
+					null,
 					array(
-						'total'     => (int) $memo_query->max_num_pages,
-						'current'   => max( 1, (int) get_query_var( 'paged', 1 ) ),
-						'type'      => 'array',
-						'prev_text' => '<span aria-hidden="true">&lt;</span>',
-						'next_text' => '<span aria-hidden="true">&gt;</span>',
+						'paginate_args' => kaju_blog_build_paginate_args(
+							(int) $memo_query->max_num_pages,
+							$memo_paged
+						),
 					)
 				);
-				if ( $pagination ) :
-					?>
-					<nav class="c-pagination" aria-label="<?php esc_attr_e( 'ページナビゲーション', 'kaju-blog' ); ?>">
-						<ul class="c-pagination__list">
-							<?php foreach ( $pagination as $link ) : ?>
-								<li class="c-pagination__item"><?php echo $link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
-							<?php endforeach; ?>
-						</ul>
-					</nav>
-				<?php endif; ?>
+				?>
 			<?php else : ?>
 				<p class="memo-list__empty">作業メモはまだありません。</p>
 			<?php endif; ?>
