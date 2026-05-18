@@ -5,6 +5,8 @@
   "scripts": {
     "test": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright test",
     "test:headed": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright test --headed",
+    "test:mp4": "npm test && npm run export:mp4",
+    "export:mp4": "bash scripts/export-mp4.sh",
     "install:browsers": "PLAYWRIGHT_BROWSERS_PATH=./.playwright-browsers playwright install chromium"
   },
   "devDependencies": {

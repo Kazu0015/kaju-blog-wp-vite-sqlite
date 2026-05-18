@@ -66,6 +66,7 @@ pnpm-debug.log*
 playwright/node_modules/
 playwright/.playwright-browsers/
 playwright/test-results/
+playwright/output/
 playwright/playwright-report/
 playwright/blob-report/
 playwright/.cache/
