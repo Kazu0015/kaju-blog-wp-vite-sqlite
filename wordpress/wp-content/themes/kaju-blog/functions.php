@@ -13,6 +13,7 @@ require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/pagination.php';
 require_once get_template_directory() . '/inc/cpt.php';
 require_once get_template_directory() . '/inc/setup.php';
+require_once get_template_directory() . '/inc/ogp.php';
 require_once get_template_directory() . '/inc/cf7.php';
 require_once get_template_directory() . '/inc/cf7-setup.php';
 require_once get_template_directory() . '/inc/seed-records.php';
