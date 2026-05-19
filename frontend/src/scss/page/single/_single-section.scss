@@ -129,26 +129,23 @@ page > single > section
 }
 
 .single-section__image-wrapper {
-  flex-shrink: 0;
   width: 100%;
-
-  @include g.mq(md) {
-    width: 210px;
-  }
+  min-width: 0;
 }
 
 .single-section__image-circle {
   display: block;
-  width: 180px;
-  height: 180px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
-  margin: 0 auto;
 
   @include g.mq(md) {
     width: 210px;
     height: 210px;
+    aspect-ratio: auto;
   }
 }
 
@@ -167,9 +164,24 @@ page > single > section
 
 .single-section__point-wrapper {
   display: flex;
-  // justify-content: space-between;
-  align-items: center;
-  gap: 100px;
+  flex-direction: column;
+  gap: 20px;
+
+  @include g.mq(md) {
+    flex-direction: row;
+    align-items: center;
+    gap: 36px;
+  }
+
+  @include g.mq(lg) {
+    gap: 100px;
+  }
+
+  .single-section__image-wrapper {
+    @include g.mq(md) {
+      flex: 1;
+    }
+  }
 }
 
 .single-section__point {
@@ -179,6 +191,11 @@ page > single > section
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+
+  @include g.mq(md) {
+    flex: 1;
+  }
 }
 
 .single-section__point-title {
@@ -208,7 +225,22 @@ page > single > section
 
 .single-section__list-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+
+  @include g.mq(md) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+
+  .single-section__image-wrapper {
+    flex-shrink: 0;
+
+    @include g.mq(md) {
+      width: 210px;
+    }
+  }
 }
 
