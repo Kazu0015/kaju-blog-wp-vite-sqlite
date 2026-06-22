@@ -9,7 +9,7 @@ page > top > kv
 }
 
 $top-kv-slide: 7s; // main.js の TOP_KV_SLIDE_MS と揃える
-$top-kv-crossfade: 1.5s; // 画像の opacity。SP リード二層は下で transition なし（即時）
+$top-kv-crossfade: 1.5s; // SP 画像・リード二層の opacity（共通）
 $top-kv-max-height: 716px;
 
 .top-kv__image-wrapper {
@@ -211,13 +211,6 @@ $top-kv-lead-radius-sp: 24px;
     display: block;
     width: max-content;
     margin: 0;
-  }
-
-  @media (max-width: 767px) {
-    .top-kv__lead-layer {
-      /* 二層 opacity ブレンド中、同じ rect でも字形の見え方が縦に流れることがある */
-      transition: none;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
 import '../scss/main.scss';
 
 /**
- * SP（md 未満）: 6枚の KV を 1 枚ずつ opacity で切り替え。
+ * SP（md 未満）: KV 画像とリードを同時に opacity でクロスフェード（1.5s）。
  * PC 幅では合成1枚を表示しタイマー停止・リードは初期文言に戻す。
  *
  * レイアウト調査: `?kvDebug=1` を付けて SP 幅で開くか、`sessionStorage.setItem('topKvDebug','1')` 後に再読込。
