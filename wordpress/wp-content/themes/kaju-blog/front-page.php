@@ -17,12 +17,19 @@ $records  = new WP_Query(
 );
 
 $kv_images = array(
-	array( 'src' => 'img/top/photo-peach.webp', 'alt' => 'もも' ),
-	array( 'src' => 'img/top/photo-cherry.webp', 'alt' => 'さくらんぼ' ),
-	array( 'src' => 'img/top/photo-grape.webp', 'alt' => 'ぶどう' ),
-	array( 'src' => 'img/top/photo-plum.webp', 'alt' => 'すもも' ),
-	array( 'src' => 'img/top/photo-blueberry.webp', 'alt' => 'ブルーベリー' ),
-	array( 'src' => 'img/top/photo-prune.webp', 'alt' => 'プルーン' ),
+	array( 'src' => 'img/top/photo-peach', 'alt' => 'もも', 'width' => 2400, 'height' => 1792 ),
+	array( 'src' => 'img/top/photo-cherry', 'alt' => 'さくらんぼ', 'width' => 2400, 'height' => 1792 ),
+	array( 'src' => 'img/top/photo-grape', 'alt' => 'ぶどう', 'width' => 2400, 'height' => 1792 ),
+	array( 'src' => 'img/top/photo-plum', 'alt' => 'すもも', 'width' => 2400, 'height' => 1792 ),
+	array( 'src' => 'img/top/photo-blueberry', 'alt' => 'ブルーベリー', 'width' => 2400, 'height' => 1792 ),
+	array( 'src' => 'img/top/photo-prune', 'alt' => 'プルーン', 'width' => 2400, 'height' => 1792 ),
+);
+
+$kv_image_combined = array(
+	'src'    => 'img/top/img-top-kv',
+	'alt'    => 'もも、さくらんぼ、ぶどう、すもも、ブルーベリー、プルーンの果樹',
+	'width'  => 7200,
+	'height' => 3584,
 );
 
 $variety_items = array(
@@ -39,13 +46,40 @@ $variety_items = array(
 	<div class="top-kv">
 		<div class="top-kv__inner">
 			<div class="top-kv__image-wrapper">
-				<ul class="top-kv__image-list">
+				<ul class="top-kv__image-list top-kv__image-list--slides">
 					<?php foreach ( $kv_images as $i => $img ) : ?>
 						<li class="top-kv__image-item<?php echo 0 === $i ? ' is-active' : ''; ?>">
-							<img class="top-kv__image" src="<?php echo esc_url( kaju_blog_asset_uri( $img['src'] ) ); ?>" alt="<?php echo esc_attr( $img['alt'] ); ?>" width="8256" height="2048"<?php echo 0 === $i ? ' fetchpriority="high"' : ''; ?> decoding="async">
+							<?php
+							$kv_img_attrs = array(
+								'class'    => 'top-kv__image',
+								'alt'      => $img['alt'],
+								'width'    => $img['width'],
+								'height'   => $img['height'],
+								'decoding' => 'async',
+							);
+							if ( 0 === $i ) {
+								$kv_img_attrs['fetchpriority'] = 'high';
+							}
+							kaju_blog_the_picture_webp( $img['src'], $kv_img_attrs );
+							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
+				<div class="top-kv__image-list top-kv__image-list--combined">
+					<?php
+					kaju_blog_the_picture_webp(
+						$kv_image_combined['src'],
+						array(
+							'class'         => 'top-kv__image',
+							'alt'           => $kv_image_combined['alt'],
+							'width'         => $kv_image_combined['width'],
+							'height'        => $kv_image_combined['height'],
+							'fetchpriority' => 'high',
+							'decoding'      => 'async',
+						)
+					);
+					?>
+				</div>
 			</div>
 			<div class="top-kv__lead">
 				<div class="top-kv__lead-body">

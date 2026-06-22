@@ -23,6 +23,111 @@ function kaju_blog_asset_uri( string $path = '' ): string {
 }
 
 /**
+ * テーマ内静的ファイルの絶対パス（img/ 等）
+ */
+function kaju_blog_asset_path( string $path = '' ): string {
+	$path = ltrim( $path, '/' );
+	return trailingslashit( get_template_directory() ) . $path;
+}
+
+/**
+ * 拡張子なしベースパスから WebP とフォールバック（jpg/png）の URL を解決する。
+ *
+ * @param string $base_path 例: img/top/photo-peach
+ * @return array{webp: ?string, fallback: ?string}
+ */
+function kaju_blog_resolve_image_sources( string $base_path ): array {
+	$base_path = ltrim( $base_path, '/' );
+	$dir       = dirname( $base_path );
+	$name      = basename( $base_path );
+	if ( '.' === $dir ) {
+		$dir = '';
+	}
+
+	$prefixes = array();
+	if ( '' !== $dir ) {
+		$prefixes[] = $dir . '/' . $name;
+		$prefixes[] = $dir . '/org/' . $name;
+	} else {
+		$prefixes[] = $name;
+	}
+
+	$webp     = null;
+	$fallback = null;
+
+	foreach ( $prefixes as $prefix ) {
+		$webp_rel = $prefix . '.webp';
+		if ( is_readable( kaju_blog_asset_path( $webp_rel ) ) ) {
+			$webp = kaju_blog_asset_uri( $webp_rel );
+			break;
+		}
+	}
+
+	foreach ( $prefixes as $prefix ) {
+		foreach ( array( 'jpg', 'jpeg', 'png' ) as $ext ) {
+			$rel = $prefix . '.' . $ext;
+			if ( is_readable( kaju_blog_asset_path( $rel ) ) ) {
+				$fallback = kaju_blog_asset_uri( $rel );
+				break 2;
+			}
+		}
+	}
+
+	if ( ! $fallback ) {
+		$fallback = $webp;
+	}
+
+	return array(
+		'webp'     => $webp,
+		'fallback' => $fallback,
+	);
+}
+
+/**
+ * WebP を優先する picture 要素を出力する。
+ *
+ * @param string               $base_path 拡張子なし、例: img/top/photo-peach
+ * @param array<string, mixed> $img_attrs img に付与する属性（class, alt, width, height, loading, decoding, fetchpriority）
+ */
+function kaju_blog_the_picture_webp( string $base_path, array $img_attrs = array() ): void {
+	$sources = kaju_blog_resolve_image_sources( $base_path );
+	if ( ! $sources['webp'] && ! $sources['fallback'] ) {
+		return;
+	}
+
+	$img_src = $sources['fallback'] ?: $sources['webp'];
+
+	echo '<picture>';
+	if ( $sources['webp'] ) {
+		printf(
+			'<source type="%1$s" srcset="%2$s" />',
+			esc_attr( 'image/webp' ),
+			esc_url( $sources['webp'] )
+		);
+	}
+
+	printf( '<img src="%s"', esc_url( $img_src ) );
+
+	$allowed = array( 'class', 'alt', 'width', 'height', 'loading', 'decoding', 'fetchpriority' );
+	foreach ( $allowed as $name ) {
+		if ( ! array_key_exists( $name, $img_attrs ) ) {
+			continue;
+		}
+		$value = $img_attrs[ $name ];
+		if ( '' === $value || null === $value ) {
+			continue;
+		}
+		if ( in_array( $name, array( 'width', 'height' ), true ) ) {
+			printf( ' %1$s="%2$d"', esc_attr( $name ), (int) $value );
+		} else {
+			printf( ' %1$s="%2$s"', esc_attr( $name ), esc_attr( (string) $value ) );
+		}
+	}
+
+	echo ' /></picture>';
+}
+
+/**
  * 固定ページ URL（未作成時はスラッグパスへフォールバック）
  */
 function kaju_blog_page_url( string $slug ): string {

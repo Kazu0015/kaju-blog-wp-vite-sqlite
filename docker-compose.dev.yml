@@ -14,6 +14,8 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define( 'KAJU_BLOG_VITE_STRATEGY', 'dev' );
         define( 'KAJU_BLOG_VITE_INTERNAL_ORIGIN', 'http://vite:5173' );
+        defined( 'WP_HOME' )    || define( 'WP_HOME',    'http://localhost:8080' );
+        defined( 'WP_SITEURL' ) || define( 'WP_SITEURL', 'http://localhost:8080' );
 
   vite:
     image: node:20-alpine

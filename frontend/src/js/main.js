@@ -1,15 +1,10 @@
 import '../scss/main.scss';
 
 /**
- * SP（md 未満）: KV を 1 枚ずつ切り替え（Ken Burns は SP では付与しない）。
- * リードは二重レイヤーだが SP では opacity トランジション無しで即時切替（SCSS）。
- * PC 幅ではグリッド表示のためタイマー停止・クラス解除・リードは初期文言に戻す。
+ * SP（md 未満）: 6枚の KV を 1 枚ずつ opacity で切り替え。
+ * PC 幅では合成1枚を表示しタイマー停止・リードは初期文言に戻す。
  *
  * レイアウト調査: `?kvDebug=1` を付けて SP 幅で開くか、`sessionStorage.setItem('topKvDebug','1')` 後に再読込。
- * コンソールに .top-kv__lead / lead-body / 1行目 / アクティブ img の座標・高さ・transform が出る。
- * 手動計測: `window.__topKvDebugSnapshot('任意ラベル')`
- * 読み方: `leadBodyOffsetH` と `lead.top` が切替前後で不変なら DOM 上のリード移動はなく、
- *   見かけのズレは画像の transform / クロスフェード合成（視差）を疑う。`Δ vs syncDone` が opacity 中のドリフト。
  *
  * 犯人捜し: `?kvOff=leadHalo,imgFade` のようにカンマ区切り（main.js の KV_OFF_FLAGS 参照）。
  * html に `kv-off-<flag>` が付き、_top-kv.scss で該当スタイルだけ無効化。本番では付けない。
@@ -74,7 +69,7 @@ function destroyTopKvSlideshow() {
 }
 
 function initTopKvSlideshow() {
-  const list = document.querySelector(".top-kv__image-list");
+  const list = document.querySelector(".top-kv__image-list--slides");
   if (!list) return;
 
   destroyTopKvSlideshow();
@@ -87,7 +82,7 @@ function initTopKvSlideshow() {
   const firstLayerParas =
     layers.length >= 1 ? Array.from(layers[0].querySelectorAll(".top-kv__lead-text")) : [];
 
-  /** スライド順に [1行目, 2行目]。0番は index.html の初期文言をそのまま使う */
+  /** スライド順に [1行目, 2行目]。0番は front-page の初期文言をそのまま使う */
   const TOP_KV_LEAD_LINES =
     firstLayerParas.length >= 2
       ? [
@@ -124,9 +119,9 @@ function initTopKvSlideshow() {
     const activeIdx = items.findIndex((li) => li.classList.contains("is-active"));
     const activeLi = activeIdx >= 0 ? items[activeIdx] : null;
     const activeImg = activeLi?.querySelector(".top-kv__image");
-    const bodyEl = lead?.querySelector(".top-kv__lead-body");
     const visibleLayer = layers.find((ly) => ly.classList.contains("top-kv__lead-layer--visible"));
     const firstLine = visibleLayer?.querySelector(".top-kv__lead-text");
+    const bodyEl = lead?.querySelector(".top-kv__lead-body");
 
     const payload = {
       phase,
@@ -147,8 +142,6 @@ function initTopKvSlideshow() {
       })),
       firstLeadLine: rectPick(firstLine),
       activeImg: rectPick(activeImg),
-      activeImgTransform: activeImg ? getComputedStyle(activeImg).transform : null,
-      activeImgKb: activeImg?.classList.contains("top-kv__image--kb") ?? null,
     };
     console.log(`[kvDebug] ${phase}`, payload);
     return payload;
@@ -216,15 +209,6 @@ function initTopKvSlideshow() {
     if (kvDebug) snapshotKvLayout(`lead:afterClassSwap slide=${i}`);
   };
 
-  const restartKenBurns = (img) => {
-    if (!img || mqReduce.matches) return;
-    /* SP: rect は不変でもクリップ内の写ちが動き、固定リードに対して「ずれ」に見えることがある */
-    if (mqMobile.matches) return;
-    img.classList.remove("top-kv__image--kb");
-    void img.offsetWidth;
-    img.classList.add("top-kv__image--kb");
-  };
-
   const apply = (nextIndex, { instantLead } = {}) => {
     const prevDomIndex = index;
     const normalized = ((nextIndex % items.length) + items.length) % items.length;
@@ -236,24 +220,10 @@ function initTopKvSlideshow() {
 
     index = normalized;
 
-    const hadActive = items.some((li) => li.classList.contains("is-active"));
-    const incomingLi = items[index];
-    const incomingImg = incomingLi?.querySelector(".top-kv__image");
-
-    /* SP: アクティブ化の後に restart すると、前回表示済みスライドは forwards 終端→identity に
-     一瞬スナップしつつ opacity が上がり、手前のリードが縦に滑ったように見える。
-     非表示のうち（is-active 付与前）に入り画像だけ振り直す。初回は hadActive が false のため後段で実行。 */
-    if (mqMobile.matches && hadActive && incomingImg && !incomingLi.classList.contains("is-active")) {
-      restartKenBurns(incomingImg);
-    }
-
     items.forEach((li, idx) => {
       li.classList.toggle("is-active", idx === index);
     });
 
-    if (mqMobile.matches && !hadActive && incomingImg) {
-      restartKenBurns(incomingImg);
-    }
     if (mqMobile.matches) {
       if (instantLead) {
         syncLeadInstant(index);
@@ -263,41 +233,7 @@ function initTopKvSlideshow() {
     }
 
     if (kvDebug) {
-      const slideTag = index;
-      const syncSnap = snapshotKvLayout(`apply:syncDone slide=${slideTag}`);
-      requestAnimationFrame(() => {
-        const a = snapshotKvLayout(`apply:rAF1 slide=${slideTag}`);
-        requestAnimationFrame(() => {
-          const b = snapshotKvLayout(`apply:rAF2 slide=${slideTag}`);
-          if (a && b && a.lead && b.lead) {
-            console.log("[kvDebug] Δ lead (rAF2 - rAF1)", {
-              dTop: round2(b.lead.top - a.lead.top),
-              dHeight: round2(b.lead.height - a.lead.height),
-              dFirstLineTop: round2(
-                (b.firstLeadLine?.top ?? 0) - (a.firstLeadLine?.top ?? 0),
-              ),
-            });
-          }
-        });
-      });
-
-      /* リード／画像の opacity 中に座標が動くか（SP はリード即時・KB なし想定） */
-      if (mqMobile.matches && !instantLead && syncSnap) {
-        [400, 900, 1450].forEach((ms) => {
-          window.setTimeout(() => {
-            const mid = snapshotKvLayout(`apply:t+${ms}ms slide=${slideTag}`);
-            if (!mid?.lead || !syncSnap.lead) return;
-            console.log(`[kvDebug] Δ vs syncDone (t+${ms}ms)`, {
-              dLeadTop: round2(mid.lead.top - syncSnap.lead.top),
-              dFirstLineTop: round2(
-                (mid.firstLeadLine?.top ?? 0) - (syncSnap.firstLeadLine?.top ?? 0),
-              ),
-              dImgTop: round2((mid.activeImg?.top ?? 0) - (syncSnap.activeImg?.top ?? 0)),
-              imgTransform: mid.activeImgTransform,
-            });
-          }, ms);
-        });
-      }
+      snapshotKvLayout(`apply:syncDone slide=${index}`);
     }
   };
 
@@ -317,13 +253,10 @@ function initTopKvSlideshow() {
     if (mqMobile.matches) {
       start();
     } else {
-      items.forEach((li) => {
-        li.classList.remove("is-active");
-        const img = li.querySelector(".top-kv__image");
-        if (img) {
-          img.classList.remove("top-kv__image--kb");
-        }
-      });
+      items.forEach((li) => li.classList.remove("is-active"));
+      if (items[0]) {
+        items[0].classList.add("is-active");
+      }
       index = 0;
       syncLeadInstant(0);
     }
@@ -404,7 +337,7 @@ applyKvOffFromQuery();
 
 /** bfcache 復帰時は古いタイマー・リード状態が残るため再初期化 */
 window.addEventListener("pageshow", (event) => {
-  if (event.persisted && document.querySelector(".top-kv__image-list")) {
+  if (event.persisted && document.querySelector(".top-kv__image-list--slides")) {
     bootTopKv();
   }
 });
