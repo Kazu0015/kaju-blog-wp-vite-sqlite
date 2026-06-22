@@ -92,8 +92,10 @@ $top-kv-max-height: 716px;
 
   .top-kv__image-list--combined & {
     @include g.mq(md) {
-      height: auto;
+      height: 100%;
       min-height: 0;
+      object-fit: cover;
+      object-position: center;
     }
   }
 }
